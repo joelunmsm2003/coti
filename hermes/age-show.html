@@ -1,0 +1,92 @@
+<html><head><style type="text/css">@charset "UTF-8";[ng\:cloak],[ng-cloak],[data-ng-cloak],[x-ng-cloak],.ng-cloak,.x-ng-cloak,.ng-hide:not(.ng-hide-animate){display:none !important;}ng\:form{display:block;}.ng-animate-shim{visibility:hidden;}.ng-anchor{position:absolute;}</style>
+    <meta charset="UTF-8">
+    <meta name="google" value="notranslate">
+
+
+    <title>CodePen - Mostrar/Ocultar Panel AngularJS (Simple)</title>
+    
+    
+    <link rel="stylesheet prefetch" href="/css/age-show.css">
+    <link rel="stylesheet prefetch" href="/css/bootstrap.min.css">
+
+        <style>
+      .panel-body .showHideOptions {
+  display: inline-block;
+  font-size: .8em;
+  text-align: right;
+  padding-right: 10px;
+  padding-left: 10px;
+  float: right;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: pointer;
+}
+    </style>
+
+    <script>
+  window.console = window.console || function(t) {};
+</script>
+
+    
+    
+  </head>
+
+  <body ng-app="" class="ng-scope">
+
+    
+  <br>
+  <div class="container">
+    <h1>Titulo de la página</h1>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h5>
+          <small class="glyphicon glyphicon-menu-right"></small>
+          Titulo del Panel
+        </h5>
+        <a href="#" class="showHideOptions" ng-click="showFunction['panel1'] = !showFunction['panel1']">Mostrar / Ocultar</a>
+        <hr>
+        <div ng-show="showFunction['panel1']" ,="" ng-init="showFunction['panel1'] = true" class="check-element sample-show-hide">
+            Aqui va el contenido del Panel 1.
+        </div>
+      </div>
+    </div>
+    <div class="panel panel-default">
+      <div class="panel-body">
+        <h5>
+          <small class="glyphicon glyphicon-menu-right"></small>
+          Titulo del Panel
+        </h5>
+        <a href="#" class="showHideOptions" ng-click="showFunction['panel2'] = !showFunction['panel2']">Mostrar / Ocultar</a>
+        <hr>
+        <div ng-show="showFunction['panel2']" ,="" ng-init="showFunction['panel2'] = true" class="">
+            Aqui va el contenido del Panel 2.
+        </div>
+      </div>
+    </div>
+    <p>
+      <span>showFunction: </span> <b class="ng-binding">{"panel1":true,"panel2":true}</b>
+    </p>
+  </div>
+
+    
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+
+    
+    
+    <script>
+  if (document.location.search.match(/type=embed/gi)) {
+    window.parent.postMessage("resize", "*");
+  }
+</script>
+
+    
+  
+
+ 
+</body></html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html> 
+<html ng-app="App">
+	<head>
+		<title>Cotizador Web</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+	</head>
+
+	<body class="bg-orange">
+
+		<ng-include src="'menu.html'"></ng-include>
+
+        <div class='container'>
+
+        <h2>Parametros</h2>
+
+        <form ng-submit="addigv(model)">
+
+        <div class='row'>
+            <div class="col-md-2">
+            Derecho Emisión
+        	<input type="text" ng-model="model.demision" class="form-control"  required="required" placeholder='Derecho de Emision'>
+        	</div>
+
+        	<div class="col-md-2">
+        	IGV
+        	<input type="text" ng-model="model.igv" class="form-control"  required="required" placeholder='IGV'>
+        	</div>
+
+        	<div class="col-md-2">
+        	 <button type='submit' class='btn btn-primary'>Editar</button>
+        	</div>
+        </div>
+
+    
+        </form>
+
+        </div>
+
+
+			
+
+	</body>
+</html>

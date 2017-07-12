@@ -1,0 +1,194 @@
+<!DOCTYPE html> 
+<html ng-app="App">
+	<head>
+		<title>Cotizador Web</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<!--<link rel="stylesheet" href="css/demo.css">-->
+		<!--<link rel="stylesheet" href="css/sky-forms.css">-->
+		<!--<link rel="stylesheet" href="css/sky-forms-orange.css">-->
+
+	</head>
+	<body class="bg-orange">
+
+
+    	<div class="container">	
+
+    	
+ 			<img src="img/logo-hermes.png" class="img-responsive" alt="Image">
+		    
+    		
+    		
+    		<ng-include src="'modales.html'"></ng-include>	
+
+			<form class="sky-form" ng-submit="saveContact(model,precio,check.ubicL,ubicP)">
+				
+			
+				<h3>Hermes Corres de Seguros</h3>
+
+				
+
+					<h4>Datos del Vehículo:</h4>
+					
+						<div class="row">
+
+    
+							<div class="col-md-3">
+								Marca:								
+									<select  ng-change= "obtenermodelo(model)" ng-options="item as item.name_marca for item in marca track by item.id_marca" type="text" class="form-control" ng-model="model.marca" required =""  ></select>
+									
+							</div>
+
+							<div class="col-md-3">
+								Modelo:								
+									<select  ng-change= "obtenerclase(model)" ng-options="item as item.id_modelo__name_model for item in modelo track by item.id_modelo" type="text" class="form-control" ng-model="model.modelo" required =""  ></select>
+									<i></i>
+								
+							</div>
+
+							<div class="col-md-3">
+								Tipo:				
+									<select  ng-change= "obteneruso(model)" ng-options="item as item.id_tipo__clase for item in claseModelo track by item.id" type="text" class="form-control" ng-model="model.claseModelo" required =""  ></select>
+									<i></i>
+								
+							</div>
+
+						
+
+							<div class="col-md-3">
+								Uso:						
+									<select  ng-options="item.uso as item.uso__uso for item in uso" type="text" class="form-control" ng-model="model.uso" required =""  ></select>
+								
+									
+							</div>
+
+						</div>
+							
+					
+						
+						<div class="row">
+
+
+							<div class="col-md-3" >
+								Año Fabricación:								
+									<select ng-change='evaluaanio(model.anio)' ng-options="item as item.anio_antig for item in anio track by item.id_anio" type="text" class="form-control" ng-model="model.anio" required ="" ></select>
+									</select>
+								
+							</div>
+
+							<div ng-show='showantiguedad' class="col-md-3">
+								Auto:								
+									<select placeholder="Seleccionar Año" ng-options="item as item.label for item in antiguedad track by item.id" type="text" class="form-control" ng-model="model.antiguedad" ng-click='antig(model)' required =""  ></select>
+									</select>
+					
+								
+							</div>
+
+
+
+							<div class="col-md-3">
+								Modalidad:								
+							
+									<select ng-options="item as item.name_modalidad for item in modalidad" type="text" class="form-control" ng-model="model.modalidad" required =""  ></select>
+						
+							</div>
+<!-- 
+								<div class="col-md-3">
+								Timón:							
+									<select placeholder="Seleccionar Timón" ng-options="item as item.name_tipo for item in timon track by item.id_timon" type="text" class="form-control" ng-model="model.timon" required =""  ></select>
+									<i></i>
+								
+							</div> -->
+
+							
+
+							<div class="col-md-3">
+								Ubicación:	
+
+	<select class='form-control' ng-options="item as item.label for item in items track by item.id" ng-model="selected"></select>					
+														
+							</div>
+
+							<br></br><br></br>
+
+							<div class="col-md-3">
+						
+							Valor Actual:
+							
+							<input type="number" ng-model="precio" required ="" class='form-control'>
+						
+						</div>
+
+
+						</div>	
+			
+	
+					<h4>Datos Personales:</h4>
+					<div class="row">
+
+
+						<div class="col-md-3">
+						
+						Nombre Completo:
+							<i class="icon-append icon-user"></i>
+							<input   type="text" ng-model='model.name' class='form-control'>
+						
+						</div>
+
+						<div class="col-md-3">
+					
+						Email:
+							<i class="icon-append icon-user"></i>
+							<input   type="text" ng-model="model.email"  class='form-control'>
+						
+						</div>
+
+						<div class="col-md-3">
+		
+						Celular:
+							<i class="icon-append icon-user"></i>
+							<input   type="text" ng-model='model.cel'  class='form-control'>
+				
+						</div>
+
+						<div class="col-md-3">
+						<input ng-model="check" type="checkbox"  name="checkbox"> Envia esta cotización a tu correo
+						</div>
+
+						<br></br><br></br>
+						
+						<div class="col-md-3">
+							
+							
+							<button type="submit" class='btn btn-primary'>Cotizar</button>
+
+
+						</div>
+
+				
+			</form>
+	
+		</div>
+
+		<style type="text/css">
+
+			 button,.confirm{
+
+    background-color: #04244D;
+
+
+  }
+
+  #map_div {
+        height: 480px;
+}
+
+
+		</style>
+
+
+
+	</body>
+</html>
+
+

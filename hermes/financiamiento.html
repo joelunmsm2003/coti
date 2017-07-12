@@ -1,0 +1,135 @@
+<!DOCTYPE html> 
+<html ng-app="App">
+	<head>
+		<title>Servicios Web</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+		
+
+	</head>
+	<body class="bg-orange">
+
+			<ng-include src="'menu.html'"></ng-include>
+      
+
+
+
+    	<div class="container">	
+
+
+
+    	<h2>Financiamiento</h2><br>
+
+    		<ng-include src="'modales.html'"></ng-include>
+
+    		<div class="jumbotron">		
+		
+			<form ng-submit="addfinanciamiento(model)">
+
+			<div class='row'>
+
+			<div class="col-md-3">
+
+			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#nuevofinanciamiento"><i class="fa fa-plus"></i></button>
+				<label>Financiamiento:</label>
+
+				<select ng-options="item as item.financiamiento for item in listafinanciamiento track by item.financiamiento" type="text" class="form-control" ng-model="model.financiamiento" required =""  ></select>
+
+
+			</div>
+
+            <div class="col-md-3">
+
+				
+				<label>Aseguradora :</label><select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="model.aseguradora" required =""  ></select>
+
+			</div>
+
+            <div class="col-md-3">
+				Cuota :<input ng-model="model.cuota" type="text" class="form-control" required =""  >
+			</div>
+
+            <div class="col-md-3">
+				Factor :<input ng-model="model.tea" type="text" class="form-control" required =""  >
+			</div>			
+			
+
+			</div>
+
+			<br>
+
+			<button type='submit' class='btn btn-primary'>Agregar</button>
+			
+			</form>
+
+			</div>
+
+
+      <!--Filtro de Busqueda-->
+
+        <div class='section '>
+            <i class="fa fa-filter" aria-hidden="true"></i>
+            <label for='filtro'>Filtro</label>
+
+            <div class='row'>
+                <div class='col-md-4'>
+                    <input placeholder='Busqueda' ng-model='data' id='filtro' type="" class='form-control' name="">
+                </div>
+            </div>
+        </div>
+
+        <!--Contador-->
+
+      <label><i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
+        Resultado  <span ng-if='data'>para {{data}}</span>: {{(man_finan | filter: data).length }}</label>
+
+
+			
+<table class="table table-striped table-condensed table-hover">
+    
+        <tbody>
+
+            <thead>
+
+            <tr>
+                
+                <th class="id_finan__financiamiento">Financiamiento <a ng-click="sort_by('id_finan__financiamiento',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="id_aseg__name_asegurad">Aseguradora <a ng-click="sort_by('id_aseg__name_asegurad',currentPage)"><i class="icon-sort"></i></a></th>
+           		<th class="cuota">Cuota<a ng-click="sort_by('cuota',currentPage)"><i class="icon-sort"></i></a></th>
+           		<th class="tea">Factor<a ng-click="sort_by('tea',currentPage)"><i class="icon-sort"></i></a></th>
+                <th></th>
+                            
+            </tr>
+
+            </thead>
+
+
+            <tr  ng-repeat="contact in listafinance | filter:data" class='active' ts-repeat>
+
+            	
+
+				<td>{{contact.id_finan__financiamiento}}</td>
+				<td>{{contact.id_aseg__name_asegurad}}</td>
+				<td>{{contact.cuota}}</td>
+				<td>{{contact.tea}}</td>
+
+
+          		<td>
+               
+          		<a ng-click="editar(contact)" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editfin"><i class="fa fa-edit"></i></a>
+                 <a ng-click="eliminarfin(contact)" class="btn btn-sm btn-primary" ><i class="fa fa-trash"></i></a>
+                </td>
+
+            </tr>
+        </tbody>
+
+
+        </table>
+				
+			
+
+	</body>
+</html>

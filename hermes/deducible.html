@@ -1,0 +1,247 @@
+<!DOCTYPE html> 
+<html ng-app="App">
+
+	<head>
+		<title>Cotizador Web</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+
+
+
+	</head>
+
+
+
+	<body class="bg-orange">
+
+        <ng-include src="'menu.html'"></ng-include>
+       
+
+
+
+    	<div class="container">	
+
+        <h2>Deducibles</h2>
+        <br>
+
+        <ng-include src="'modales.html'"></ng-include>  		
+		
+			<form ng-submit="adddeduccion(model)">
+
+            <div class='row'>
+<!--
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#deducible"><i class="fa fa-plus"></i></button>
+                Deducibles: <select ng-options="item as item.deducible for item in deducciones track by item.id_deduc" type="text" class="form-control" ng-model="model.deduccion" required =""  ></select>
+            </div>
+-->
+
+<div class="col-md-2">
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#deducible"><i class="fa fa-plus"></i></button>
+Deducibles: <select multiple ng-options="item as item.deducible for item in deducciones track by item.id_deduc"    type="text" class="form-control" ng-model="model.deduccion"   required ="" ></select>
+</div>
+
+
+<div class="col-md-2">
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#aseguradora"><i class="fa fa-plus"></i></button>
+Aseguradora:<select multiple ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad"  type="text" class="form-control" ng-model="model.aseguradora"  required ="" ></select>
+</div>
+
+<!--
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalidad"><i class="fa fa-plus"></i></button>
+                Modalidad :<select  ng-options="item as item.name_modalidad for item in modalidad track by item.id_modalidad" type="text" class="form-control" ng-model="model.modalidad" required =""  ></select>
+            </div>
+-->
+<div class="col-md-2">
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#modalidad"><i class="fa fa-plus"></i></button>
+Modalidad:
+<select multiple ng-options="item as item.name_modalidad for item in modalidad track by item.id_modalidad"  type="text" class="form-control" ng-model="model.modalidad" required ="" ></select>
+</div>
+
+
+             <div class="col-md-2">
+
+    			<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#uso"><i class="fa fa-plus"></i></button>
+                Uso: <select multiple ng-options="item as item.uso for item in uso track by item.id_uso" type="text" class="form-control" ng-model="model.uso" required ="" ></select>
+                
+
+            </div>
+
+            
+
+                <div class="col-md-2" ng-show='False'>
+
+                <button type="button" class="btn btn-primary btn-sm" ><i class="fa fa-cube"></i></button>
+                Categorias :<select  ng-options="item as item.categoria for item in categorias track by item.id_categ" type="text" class="form-control" ng-model="model.categoria" required =""  ></select>
+
+            </div>
+
+            <div class="col-md-2">
+
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#riesgo"><i class="fa fa-plus"></i></button>
+                Riesgo :<select  multiple ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo" type="text" class="form-control" ng-model="model.riesgo" required =""  ></select>
+
+            </div>
+
+<!--
+            <div class="col-md-2">
+                <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#programa"><i class="fa fa-plus"></i></button>
+                Programa :<select  ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="model.programa" required =""  ></select>
+            </div>
+-->
+
+
+<div class="col-md-2">
+<button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#programa"><i class="fa fa-plus"></i></button>
+Programa:<select  multiple ng-options="item as item.program for item in programas track by item.id_program"  type="text" class="form-control" ng-model="model.programa"  required =""  ></select>
+</div>
+
+
+     
+
+            <div class="col-md-2">
+                 <button type="button" class="btn btn-primary btn-sm" ><i class="fa fa-cube"></i></button>
+    			Valor: <input type="text" ng-model="model.value" class="form-control"  required="required">
+
+            </div>
+
+            <div class="col-md-2">
+
+                 <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target="#clase"><i class="fa fa-plus"></i></button>
+                Tipo: <select multiple ng-options="item as item.clase for item in clases track by item.id_clase" type="text" class="form-control" ng-model="model.clase" required =""  ></select>
+
+            </div>
+
+            
+			<br></br><br></br>
+			<button type='submit' class='btn btn-primary'>Agregar</button>
+			
+			</form>
+
+
+</div>
+
+<div class='section'>
+<!--  <a href="http://cotizador.hermes.pe:800/expdeduc.php"><button type="button" class="btn btn-info ">Exportar</button></a>
+ -->
+ <a ng-click="exportardeducible(model)"  href='http://cotizador.hermes.pe:8000/exportardeducible/{{co}}' class="btn btn-info ">Exportar</a>
+
+
+  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal">Agregar Masivos</button>
+</div>
+
+<div class="container">
+
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Cargar CSV de Deducibles</h4>
+        </div>
+        <div class="modal-body">
+        <form enctype='multipart/form-data' action='http://cotizador.hermes.pe:800/uploadDed.php' class="modal-body" method='post'>
+        <h5>Seleccionar archivo </h5>
+        <input type='file' class="form-control"  required="required" name='filename'>
+        <br>
+        <button type='submit' name='submit' class="btn btn-default" value='Upload'>Cargar</button>
+
+        </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+       
+        <!--Filtro de Busqueda-->
+
+        <div class='section '>
+            <i class="fa fa-filter" aria-hidden="true"></i>
+            <label for='filtro'>Filtro</label>
+
+            <div class='row'>
+                <div class='col-md-4'>
+                    <input placeholder='Busqueda' ng-model='data' id='filtro' type="" class='form-control' name="">
+                </div>
+            </div>
+        </div>
+
+        <!--Contador-->
+
+      <label><i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
+        Resultado  <span ng-if='data'>para {{data}}</span>: {{(deduc_cob | filter: data).length }}</label>
+
+<table class="table table-striped table-condensed table-hover">
+    
+        <tbody>
+
+            <thead>
+
+            <tr>
+                
+                <th class="id_deduc__deducible">Deducible <a ng-click="sort_by('id_deduc__deducible',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="id_aseg__name_asegurad">Seguro <a ng-click="sort_by('id_aseg__name_asegurad',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="modalidad__name_modalidad">Modalidad <a ng-click="sort_by('modalidad__name_modalidad',currentPage)"><i class="icon-sort"></i></a></th>
+                <!-- <th class="anio__anio_antig">Año <a ng-click="sort_by('anio__anio_antig',currentPage)"><i class="icon-sort"></i></a></th>
+               -->  
+               <th class="id_uso__uso" >Uso <a ng-click="sort_by('id_uso__uso',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="tipo__clase" >Tipo <a ng-click="sort_by('tipo__clase',currentPage)"><i class="icon-sort"></i></a></th>
+      
+                <th class="programa__program" >Programa <a ng-click="sort_by('programa__program',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="riesgo__tipo_riesgo" >Riesgo <a ng-click="sort_by('riesgo__tipo_riesgo',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="value" >Valor <a ng-click="sort_by('value',currentPage)"><i class="icon-sort"></i></a></th>
+                <th></th>
+                
+            
+                            
+            </tr>
+
+            </thead>
+
+
+            <tr  ng-repeat="contact in deduc_cob | filter:data " class='active' ts-repeat>
+
+   
+    
+                <td>{{contact.id}}-{{contact.id_deduc__deducible| limitTo: 40}}</td>
+                <td>{{contact.id_aseg__name_asegurad}}</td>
+                <td>{{contact.modalidad__name_modalidad}}</td>
+               <!--  <td>{{contact.anio__anio_antig}}</td> -->
+         
+                <td>{{contact.id_uso__uso}}</td>
+                <td>{{contact.tipo__clase}}</td>
+          
+                 <td>{{contact.programa__program}}</td>
+                 <td>{{contact.riesgo__tipo_riesgo}}</td>
+                 
+                <td>{{contact.value}}</td>
+
+       
+                
+              
+
+                <td>
+               
+                <a ng-click="editar(contact)" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editdedu"><i class="fa fa-edit"></i></a>
+                 <a ng-click="eliminardedu(contact)" class="btn btn-sm btn-primary" ><i class="fa fa-trash"></i></a>
+                </td>
+
+            </tr>
+        </tbody>
+
+
+        </table>
+				
+			
+
+	</body>
+</html>

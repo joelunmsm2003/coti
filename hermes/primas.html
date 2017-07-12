@@ -1,0 +1,147 @@
+<!DOCTYPE html> 
+<html ng-app="App">
+	<head>
+		<title>Primas</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+	</head>
+
+	<body class="bg-orange">
+
+		<ng-include src="'menu.html'"></ng-include>
+   
+  
+
+    	<div class="container">
+
+    		<h2>Primas Minimas</h2>	<br>
+
+    		<ng-include src="'modales.html'"></ng-include>
+
+    	<div class="jumbotron">
+         
+
+            <form ng-submit="addprima(model)">
+
+			<div class='row'>
+
+                        <div class="col-md-3">
+
+                        <label>Aseguradora </label><select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="model.aseguradora" required =""  ></select>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+                        <label>Programa </label><select  ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="model.programa" required =""  ><option></option></select>
+
+                        </div>
+
+                        <div class="col-md-3">
+
+                      
+                            <label>Riesgo </label><select   ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo" type="text" class="form-control" ng-model="model.riesgo" required =""  ></select>
+
+                        </div>
+
+
+                        <div class="col-md-3">
+
+        
+                        <label>Valor Prima Minima</label>
+                        <input  class='form-control' ng-model="model.valor" class="form-control"></input>
+
+
+                        </div>
+
+
+
+            </div>
+
+                <br>
+			<button type='submit' class='btn btn-primary'>Agregar</button>
+			
+			</form>
+
+            </div>
+
+        <!--Filtro de Busqueda-->
+
+        <div class='section '>
+            <i class="fa fa-filter" aria-hidden="true"></i>
+            <label for='filtro'>Filtro</label>
+
+            <div class='row'>
+                <div class='col-md-4'>
+                    <input placeholder='Busqueda' ng-model='data' id='filtro' type="" class='form-control' name="">
+                </div>
+            </div>
+        </div>
+
+        <!--Contador-->
+
+      <label><i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
+        Resultado  <span ng-if='data'>para {{data}}</span>: {{(primas | filter: data).length }}</label>
+
+			
+
+
+
+
+<table class="table table-striped table-condensed table-hover">
+    
+        <tbody>
+
+            <thead>
+
+            <tr>
+
+            	<th class="id">Id <a ng-click="sort_by('id',currentPage)"><i class="icon-sort"></i></a></th>
+
+                <th class="aseguradora__name_asegurad">Aseguradora <a ng-click="sort_by('aseguradora__name_asegurad',currentPage)"><i class="icon-sort"></i></a></th>
+
+
+                <th class="riesgo__tipo_riesgo">Riesgo <a ng-click="sort_by('riesgo__tipo_riesgo',currentPage)"><i class="icon-sort"></i></a></th>
+                
+                <th class="programa__program" >Programa <a ng-click="sort_by('programa__program',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="primaminima" >Valor Prima Minima <a ng-click="sort_by('primaminima',currentPage)"><i class="icon-sort"></i></a></th>
+
+                <th></th>
+                            
+            </tr>
+
+            </thead>
+
+
+            <tr  ng-repeat="contact in primas  | filter: data" class='active' ts-repeat>
+
+         		
+                <td>{{contact.id}}</td>
+                <td>{{contact.aseguradora__name_asegurad}}</td>
+                
+                <td>{{contact.riesgo__tipo_riesgo}}</td>
+                <td>{{contact.programa__program}}</td>
+                <td>{{contact.primaminima}}</td>
+            
+              
+
+                <td>
+               
+                <a ng-click="editar(contact)" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editprima"><i class="fa fa-edit"></i></a>
+                 <a ng-click="eliminarprima(contact)" class="btn btn-sm btn-primary" ><i class="fa fa-trash"></i></a>
+                </td>
+
+            </tr>
+        </tbody>
+
+
+        </table>
+				
+			
+
+	</body>
+</html>

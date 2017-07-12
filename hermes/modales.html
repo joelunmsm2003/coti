@@ -1,0 +1,812 @@
+<!-- Trigger the modal with a button -->
+
+
+<!-- Modal -->
+<div id="aseguradora" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Aseguradora</h4>
+      </div>
+
+      <form ng-submit="addaseguradora(model)">
+      <div class="modal-body">
+
+      	<input type="text" name="" id="input" class="form-control" ng-model='model.data' required="required">
+
+      </div>
+      <div class="modal-footer">
+
+      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+       
+        
+        
+
+      </div>
+       </form>
+    </div>
+
+  </div>
+</div>
+
+<div id="login" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Login</h4>
+      </div>
+      <form class="sky-form" >
+        <div class="modal-body">
+
+        Usuario
+        
+        <input type="text" name="" id="input" class="form-control" ng-model='user.username' required="required">
+
+        Password
+
+        <input type="password" name="" id="input" class="form-control" ng-model='user.password' required="required">
+
+        </div>
+        <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <a class="btn btn-primary" type="submit" ng-click='login(user)'>Ingresar</a>
+        
+        </div>
+
+      </form>
+
+
+    </div>
+
+  </div>
+</div>
+
+<div id="modalidad" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Modalidad</h4>
+      </div>
+      <form class="sky-form" ng-submit="addmodalidad(model)">
+      	<div class="modal-body">
+        
+        <input type="text" name="" id="input" class="form-control" ng-model='model.data' required="required">
+
+      	</div>
+      	<div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      	</div>
+
+      </form>
+
+
+    </div>
+
+  </div>
+</div>
+
+<div id="cobertura" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Cobertura</h4>
+      </div>
+
+      <form class="sky-form" ng-submit="addcobertura(model)">
+      <div class="modal-body">
+        
+        <input type="text" name="" id="input" class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<div id="uso" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Uso</h4>
+      </div>
+      <form class="sky-form" ng-submit="adduso(model)">
+      <div class="modal-body">
+        
+        <input type="text" class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+    </div>
+
+  </div>
+</div>
+
+<div id="clase" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Tipo</h4>
+      </div>
+      <form class="sky-form" ng-submit="addclase(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div id="deducible" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Deducible</h4>
+      </div>
+      <form class="sky-form" ng-submit="adddeducible(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="login" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Autentificación</h4>
+      </div>
+      <form class="sky-form" ng-submit="logear(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.username' required="required" placeholder='Usuario'><br>
+        <input type="text"  class="form-control" ng-model='model.password' required="required" placeholder='Password'>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div id="marca" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Marca</h4>
+      </div>
+      <form class="sky-form" ng-submit="addmarca(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="modelo" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Modelo</h4>
+      </div>
+      <form class="sky-form" ng-submit="addmodelo(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="riesgo" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Riesgo</h4>
+      </div>
+      <form class="sky-form" ng-submit="addriesgo(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="clase" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Clase</h4>
+      </div>
+      <form class="sky-form" ng-submit="addclase(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="eliminarauto" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Eliminar Auto</h4>
+      </div>
+      <form class="sky-form" ng-submit="eliminarauto(edit)">
+      <div class="modal-body">
+         
+        {{edit.id_modelo__name_model}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Eliminar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="programa" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Programa</h4>
+      </div>
+      <form class="sky-form" ng-submit="addprograma(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="nuevofinanciamiento" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Financiamientopue</h4>
+      </div>
+      <form class="sky-form" ng-submit="addfinanciamientopadre(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.financiamiento' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+
+<div id="servicio" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Agregar Servicio</h4>
+      </div>
+      <form class="sky-form" ng-submit="addservicio(model)">
+      <div class="modal-body">
+         
+        <input type="text"  class="form-control" ng-model='model.data' required="required">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Agregar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="editcob" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Cobertura</h4>
+      </div>
+      <form class="sky-form" ng-submit="savecob(edit)">
+      <div class="modal-body">
+
+      Cobertura :{{edit.id_cob__descripcion}}<br></br>
+
+      Aseguradora :<select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+         
+       Uso :<select ng-options="item as item.uso for item in uso track by item.id_uso" type="text" class="form-control" ng-model="edit.uso" required ="" ></select>
+
+       Modalidad :<select  ng-options="item as item.name_modalidad for item in modalidad track by item.id_modalidad" type="text" class="form-control" ng-model="edit.modalidad" required =""  ><option></option></select>
+
+
+       Tipo:<select  ng-options="item as item.clase for item in clases track by item.id_clase" type="text" class="form-control" ng-model="edit.clase" required =""  ><option></option></select>
+
+  
+
+       Programa :<select  ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="edit.programa" required =""  ><option></option></select>
+
+       Anio :<input type="text" ng-model="edit.antigued" class="form-control"  required="required">
+
+       Valor:<input type="text" ng-model="edit.value" class="form-control"  required="required">
+
+
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div id="editauto" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Auto</h4>
+      </div>
+      <form class="sky-form" ng-submit="editauto(edit)">
+      <div class="modal-body">
+      
+      Marca
+       <select ng-options="item as item.marca for item in marcas track by item.id_marca" type="text" class="form-control" ng-model="edit.marca" required =""  ><option></option></select>
+
+      Modelo
+       <select ng-options="item as item.modelo for item in modelos track by item.id_model" type="text" class="form-control" ng-model="edit.modelo" required =""  ><option></option></select>
+     
+      Tipo
+       <select ng-options="item as item.clase for item in clases track by item.id_clase" type="text" class="form-control" ng-model="edit.clase" required =""  ><option></option></select>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="editdedu" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Deduccion</h4>
+      </div>
+      <form class="sky-form" ng-submit="savededu(edit)">
+      <div class="modal-body">
+         
+       Deducibles: {{edit.id_deduc__deducible}}
+
+       <br></br>
+
+    
+
+      Aseguradora :<select ng-options="item as item.name_asegurad for item in aseguradoras" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+         
+       Uso :<select ng-options="item as item.uso for item in uso track by item.id_uso" type="text" class="form-control" ng-model="edit.uso" required ="" ><option></option></select>
+
+       Modalidad :<select  ng-options="item as item.name_modalidad for item in modalidad track by item.id_modalidad" type="text" class="form-control" ng-model="edit.modalidad" required =""  ><option></option></select>
+
+       Tipo:<select  ng-options="item as item.clase for item in clases track by item.id_clase" type="text" class="form-control" ng-model="edit.clase" required =""  ><option></option></select>
+
+       Programa :<select  ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="edit.programa" required =""  ><option></option></select>
+
+      <!--  Anio :<select  ng-options="item as item.anio_antig for item in anio track by item.id_anio" type="text" class="form-control" ng-model="edit.anio" required =""  ><option></option></select>
+ -->
+        Riesgo :<select  ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo" type="text" class="form-control" ng-model="edit.riesgo" required =""  ><option></option></select>
+
+       Valor:<input type="text" ng-model="edit.value" class="form-control"  required="required">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div id="editriesg" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Riesgos</h4>
+      </div>
+      <form class="sky-form" ng-submit="saveriesg(edit)">
+      <div class="modal-body">
+         
+       Riesgos: {{edit.id_riesg__tipo_riesgo}}
+
+       <br></br>
+
+      Aseguradora :<select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora"  ><option></option></select>
+      Tipo:<select  ng-options="item as item.clase for item in clases track by item.id_clase" type="text" class="form-control" ng-model="edit.clase"   ><option></option></select>
+      Riesgo :<select  ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo" type="text" class="form-control" ng-model="edit.riesgo" ><option></option></select>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+<div id="editserv" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Servicio </h4>
+      </div>
+      <form class="sky-form" ng-submit="saveserv(edit)">
+      <div class="modal-body">
+      
+      Servicio:
+       
+      <select  ng-options="item as item.services for item in listaservice track by item.services" type="text" class="form-control" ng-model="edit.servicio" required =""  ></select>
+
+      Aseguradora :<select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+      Valor :<input  ng-options="item as item.valor track by item.id_serv" type="text" class="form-control" ng-model="edit.valor" required =""  >
+      
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="edittasa" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Tasa</h4>
+      </div>
+      <form class="sky-form" ng-submit="savetasas(edit)">
+      <div class="modal-body">
+         
+
+
+
+      Aseguradora :<select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+         
+       Uso :<select ng-options="item as item.uso for item in uso track by item.id_uso" type="text" class="form-control" ng-model="edit.uso" required ="" ></select>
+
+       Modalidad :<select  ng-options="item as item.name_modalidad for item in modalidad track by item.id_modalidad" type="text" class="form-control" ng-model="edit.modalidad" required =""  ><option></option></select>
+
+       Tipo:<select  ng-options="item as item.clase for item in clases track by item.id_clase" type="text" class="form-control" ng-model="edit.clase" required =""  ><option></option></select>
+
+       Programa :<select  ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="edit.programa" required =""  ><option></option></select>
+
+       Anio :<select  ng-options="item as item.anio_antig for item in anio track by item.id_anio" type="text" class="form-control" ng-model="edit.anio" required =""  ><option></option></select>
+
+       Riesgo :<select  ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo" type="text" class="form-control" ng-model="edit.riesgo" required =""  ><option></option></select>
+
+
+       Valor:<input type="text" ng-model="edit.value" class="form-control"  required="required">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="editpolitica" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Tasa</h4>
+      </div>
+      <form class="sky-form" ng-submit="savepoliticas(edit)">
+      <div class="modal-body">
+         
+
+
+
+      Aseguradora :<select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+         
+    <!--    Uso :<select ng-options="item as item.uso for item in uso track by item.id_uso" type="text" class="form-control" ng-model="edit.uso" required ="" ></select>
+
+       Modalidad :<select  ng-options="item as item.name_modalidad for item in modalidad track by item.id_modalidad" type="text" class="form-control" ng-model="edit.modalidad" required =""  ><option></option></select>
+
+       Tipo:<select  ng-options="item as item.clase for item in clases track by item.id_clase" type="text" class="form-control" ng-model="edit.clase" required =""  ><option></option></select> -->
+
+       Programa :<select  ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="edit.programa" required =""  ><option></option></select>
+
+       Anio :<select  ng-options="item as item.anio_antig for item in anio track by item.id_anio" type="text" class="form-control" ng-model="edit.anio" required =""  ><option></option></select>
+
+      <!--  Riesgo :<select  ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo" type="text" class="form-control" ng-model="edit.riesgo" required =""  ><option></option></select>
+ -->
+
+       Valor:<input type="text" ng-model="edit.value" class="form-control"  required="required">
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="editprima" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Prima</h4>
+      </div>
+      <form class="sky-form" ng-submit="saveprimas(edit)">
+      <div class="modal-body">
+         
+
+
+
+    Aseguradora :<select  required ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+
+    Riesgo :<select  ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo" type="text" class="form-control" ng-model="edit.riesgo" required =""  ><option></option></select>
+
+    Programa :<select  ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="edit.programa" required =""  ><option></option></select>
+
+    Valor:<input type="text" ng-model="edit.primaminima" class="form-control"  required="required">
+
+
+         
+
+
+       
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+<div id="editfin" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Editar Financiamiento</h4>
+      </div>
+      <form class="sky-form" ng-submit="savefinancia(edit)">
+      <div class="modal-body">
+         
+
+
+
+      Financiamiento :<select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+         
+        Aseguradora :<select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="edit.aseguradora" required =""  ><option></option></select>
+
+
+
+       Cuota:<input type="text" ng-model="edit.cuota" class="form-control"  required="required">
+
+       Factor:<input type="text" ng-model="edit.tea" class="form-control"  required="required">
+
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Editar</button>
+        
+      </div>
+      </form>
+
+    </div>
+
+  </div>
+</div>
+
+
+

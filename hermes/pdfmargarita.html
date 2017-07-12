@@ -1,0 +1,276 @@
+<!DOCTYPE html> 
+<html>
+	<head>
+		<title>Cosdfsdfsdfsdftizador Web</title>
+
+	</head>
+	<body>
+
+    <br>
+
+  <img src="img/logo-hermes.png" class="img-responsive" alt="Image">
+
+	<h4> Cotizacion  </h4>
+    <p></p>
+    <h4>Cliente</h4>
+    <table class="table table-striped ">
+    <thead>
+    <th>Nombre : {{cliente.fullname}}</th>
+    <th>Email :{{cliente.email}}</td>
+    <th>Celular : {{cliente.celular}}</th>
+    </table>
+
+	<h4>Detalle</h4>
+
+  	<table class="table table-striped table-condensed table-hover">
+
+		<tbody>
+
+		<thead>
+
+		<th>Marca</th>
+		<th>Modelo</th>
+		<th>Tipo</th>
+		<th>Timon</th>
+		<th>Año</th>
+		<th>Uso</th>
+		<th>Valor</th>
+		<th>Modalidad</th>
+		<th>Ubicación</th>
+		
+
+        </thead>
+
+
+   	  <tr><td>{{cliente.chose_marca__name_marca}}</td>
+	  <td>{{cliente.chose_modelo__name_model}}</td>
+	  <td>{{cliente.chose_tipo__clase}}</td>
+	  <td>{{cliente.chose_timon__name_tipo}}</td>
+	  <td>{{cliente.chose_anio__anio_antig}}</td>
+	  <td>{{cliente.chose_uso__uso}}</td>
+	  <td>{{cliente.value}}</td>
+	  <td>{{cliente.chose_modalid__name_modalidad}}</td>
+
+ 
+	  <td ng-if="cliente.chose_ubicl='1'">Lima</td>
+      <td ng-else>Provincia<td>
+
+
+	   </span>
+
+
+	   </tr>
+
+        </tbody>
+
+
+        </table>
+
+ <a ng_click='uploadpdf()' class="btn btn-sm btn-primary" >PDF <i class="fa fa-download"></i></a>
+
+<a href="">laknladnajksdb</a>
+
+<br>
+
+        <table class="table table-striped table-condensed table-hover">
+    
+        <tbody>
+            <thead>
+
+            <tr>
+              
+              <th width='20%' class="commercial_name">Aseguradoras <a ng-click="sort_by('commercial_name',currentPage)"></a></th>
+               
+                <th width='16%' class="legal_id">MAPFRE <a ng-click="sort_by('legal_id',currentPage)"></a></th>
+                <th width='16%' class="legal_id">RÍMAC <a ng-click="sort_by('legal_id',currentPage)"></a></th>
+                <th width='16%' class="legal_id">LA POSITIVA <a ng-click="sort_by('legal_id',currentPage)"></a></th>
+                <th width='16%' class="legal_id">PACÍFICO <a ng-click="sort_by('legal_id',currentPage)"></a></th>
+                <th width='16%' >HDI<a ng-click="sort_by('legal_id',currentPage)"></a></th>
+
+            </tr>
+
+            </thead>
+            <tr>
+            <td></td>
+            <td><select  ng-change= "programamapfre(model)" ng-options="item as item.id_prog__program for item in programasmapfre track by item.id_prog" type="text" class="form-control" ng-model="model.programam" required =""  ></select></td>
+
+
+            <td><select  ng-change= "programarimac(model)" ng-options="item as item.id_prog__program for item in programasrimac track by item.id_prog" type="text" class="form-control" ng-model="model.programar" required =""  ></select></td>
+
+            <td><select  ng-change= "programapositiva(model)" ng-options="item as item.id_prog__program for item in programaspositiva track by item.id_prog" type="text" class="form-control" ng-model="model.programap" required =""  ></select></td>
+
+            <td></td>
+            </tr>
+
+            <th style='background-color:#FF6601; color=#000'><strong>GPS</strong></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+
+            <tr>
+            <td>GPS</td>
+            <td>{{gps.gpsmapfre}}</td>
+            <td>{{gps.gpsrimac}}</td>
+            <td>{{gps.gpspositiva}}</td>
+            <td>{{gps.gpspacifico}}</td>
+            <td>{{gps.gpshdi}}</td>
+            </tr>
+
+            <th style='background-color:#FF6601; color=#000'><strong>Primas</strong></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+
+            <tr>
+
+
+
+            <td ng-if="perfil==1">Tasa</td>
+            <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasamapfre' type="number" class='form-control'></td>
+            <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasarimac' type="number" class='form-control'></td>
+            <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasapositiva' type="number" class='form-control'></td>
+            <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasapacifico' type="number" class='form-control'></td>
+            <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasahdi' type="number" class='form-control'></td>
+            </tr>
+
+            <tr >
+            <td>Prima Neta</td>
+            <td>{{mapfre}}</td>
+            <td>{{rimac}}</td>
+            <td>{{positiva}}</td>
+            <td>{{pacifico}}</td>
+            <td>{{hdi}}</td>
+            </tr>
+
+            <tr>
+            <td>Prima Comercial</td>
+            <td>{{mapfresubtotal}}</td>
+            <td>{{rimacsubtotal}}</td>
+            <td>{{positivasubtotal}}</td>
+            <td>{{pacificosubtotal}}</td>
+            <td>{{phdisubtotal}}</td>
+            </tr>
+
+            <tr>
+            <td>Total</td>
+            <td>{{mapfretotal}}</td>
+            <td>{{rimactotal}}</td>
+            <td>{{positivatotal}}</td>
+            <td>{{pacificototal}}</td>
+            <td>{{phditotal}}</td>
+            </tr>
+
+            <th style='background-color:#FF6601; color=#000'><strong>Financiamiento</strong></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+
+
+            <tr  ng-repeat="contact in financ | orderBy:sortingOrder:reverse" class='active' ts-repeat>
+
+                <td width='400px'>{{contact.financiamiento}}</td>
+
+
+                <td>{{contact.mapfre}}</td>   
+                <td>{{contact.rimac}}</td>   
+                <td>{{contact.positiva}}</td>
+                <td>{{contact.pacifico}}</td>
+                <td>{{contact.hdi}}</td>
+
+            </span>
+            </tr>
+
+            <tr></tr>
+
+
+            <th style='background-color:#FF6601; color=#000'><strong>Coberturas</strong></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+
+
+            <tr  ng-repeat="contact in cobertura | orderBy:sortingOrder:reverse" class='active' ts-repeat>
+
+                <td width='400px'>{{contact.descripcion}}</td>
+
+
+                <td>{{contact.mapfre}}</td>   
+                <td>{{contact.rimac}}</td>   
+                <td>{{contact.positiva}}</td>
+                <td>{{contact.pacifico}}</td>
+                <td>{{contact.hdi}}</td>
+
+            </span>
+            </tr>
+
+            <tr></tr>
+
+
+
+	    <th style='background-color:#FF6601; color=#000'><strong>Deducible</strong></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+
+            <tr  ng-repeat="contact in deducible | orderBy:sortingOrder:reverse" class='active' ts-repeat>
+                        
+            <td width='400px'>{{contact.deducible}}</td>
+
+
+                <td>{{contact.mapfre}}</td>   
+                <td>{{contact.rimac}}</td>   
+                <td>{{contact.positiva}}</td>
+                <td>{{contact.pacifico}}</td>
+                <td>{{contact.hdi}}</td>
+             	</span>
+            </tr>
+
+            <th style='background-color:#FF6601; color=#000'><strong>Servicios</strong></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+            <th style='background-color:#FF6601;'></th>
+
+            <tr  ng-repeat="contact in servic | orderBy:sortingOrder:reverse" class='active' ts-repeat>
+             <td width='400px'>{{contact.services}}</td>
+
+
+                <td>{{contact.mapfre}}</td>   
+                <td>{{contact.rimac}}</td>   
+                <td>{{contact.positiva}}</td>
+                <td>{{contact.pacifico}}</td>
+                <td>{{contact.hdi}}</td>
+             	</span>
+
+
+            </tr>
+        </tbody>
+
+
+        </table>
+
+        <ng-include src="'menu.html'" ng-if="user==1" ></ng-include>
+
+
+	</body>
+
+	<style type="text/css">
+			@media (min-width: 992px)
+			.col-md-2 {
+			margin-top: 2em;
+			width: 16.66666667%;
+			}
+
+		</style>
+</html>

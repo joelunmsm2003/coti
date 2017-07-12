@@ -1,0 +1,229 @@
+<!DOCTYPE html> 
+<html ng-app="App">
+	<head>
+		<title>Cotizador Web</title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+	</head>
+
+	<body class="bg-orange">
+
+		<ng-include src="'menu.html'"></ng-include>
+       
+       
+
+
+    <div class="container">	
+
+        <h2>Riesgos</h2>
+        <br>
+
+    <ng-include src="'modales.html'"></ng-include>	
+
+    <div class="jumbotron">     
+        	
+
+    <form ng-submit="addriesgoclase(datamodel)">
+
+
+    <div class='row'>
+
+
+    <div class="col-md-3">
+   
+    <label>Aseguradora:</label><select  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad"  type="text" class="form-control" ng-model="datamodel.aseguradora"  required =""  ></select>
+    </div>
+
+   
+
+	<div class="col-md-3">
+	<button type="button" class="btn btn-primary btn-sm" ><i class="fa fa-cube"></i></button>
+	Riesgo :<select  ng-options="item as item.tipo_riesgo for item in riesgos track by item.id_riesgo"  type="text" class="form-control" ng-model="datamodel.riesgo"   required =""  ></select>
+	
+
+
+    </div>
+
+
+    <style type="text/css">
+        
+.fixed-panel{
+    height:100px;
+    overflow-y:scroll;
+    padding: 2px;
+    padding-left:18px;
+}
+
+    </style>
+
+    <div class="col-md-3">
+
+    <label>Marca</label>
+
+
+        <div class="panel panel-success">
+                <input type="" class='form-control' name="" ng-model='marc'> 
+                <div class="fixed-panel" >   
+                    <div class="checkbox" ng-repeat='contact in marcas | filter: marc'>
+                    <label><input ng-click='traemodelo(contact)' ng-model='contact.master' type="checkbox" value="" >{{contact.name_marca}}</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+    <div class="col-md-3">
+
+
+    <label>Modelos <span ng-if='modelitos.length>0'>de  {{modelitos.length}} marcas </span></label>
+
+
+
+        <div class="panel panel-success">
+                <input type="" class='form-control' name="" ng-model='modelo'> 
+                <div class="fixed-panel" >   
+                    <div class="checkbox" ng-repeat='contact in modelitos | filter: modelo'>
+
+                        <label><i class="fa fa-car" aria-hidden="true"></i> {{contact[0].id_marca__name_marca}} 
+
+                            <input type="checkbox" value="" ng-model='contact.checkmarca' ng-click='marcacheck(contact)'></label>
+
+                       <div class="checkbox" ng-repeat='item in contact'>
+                        
+                        <label><input type="checkbox" value="" ng-model='item.checkmodel'>{{item.model}}</label>
+
+                       </div> 
+                    
+                    </div>
+                </div>
+            </div>
+    </div>
+
+
+
+
+
+	
+
+
+        </div>	
+
+		
+
+			<button type='submit' class='btn btn-primary'>Agregar</button>
+			
+			</form>
+
+            </div>
+
+
+<div class='section'>
+
+<!--  <a href="http://cotizador.hermes.pe:800/expries.php"><button type="button" class="btn btn-info ">Exportar</button></a>
+ -->
+
+<a ng-click='traease(datamodel.aseguradora)' href='http://cotizador.hermes.pe:8000/exportarriesgo/{{riesgoid}}' class="btn btn-info ">Exportar</a>
+
+ 
+
+  <button type="button" class="btn btn-info " data-toggle="modal" data-target="#myModal">Agregar Masivos</button>
+</div>
+
+
+<div class="container">
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Cargar CSV de Riesgos</h4>
+        </div>
+        <div class="modal-body">
+        <form enctype='multipart/form-data' action='http://cotizador.hermes.pe:800/uploadRies.php' class="modal-body" method='post'>
+        <h5>Seleccionar archivo </h5>
+        <input type='file' class="form-control"  required="required" name='filename'>
+        <br>
+        <button type='submit' name='submit' class="btn btn-default" value='Upload'>Cargar</button>
+
+        </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+       <!--Filtro de Busqueda-->
+
+        <div class='section '>
+            <i class="fa fa-filter" aria-hidden="true"></i>
+            <label for='filtro'>Filtro</label>
+
+            <div class='row'>
+                <div class='col-md-4'>
+                    <input placeholder='Busqueda' ng-model='data' id='filtro' type="" class='form-control' name="">
+                </div>
+            </div>
+        </div>
+
+        <!--Contador-->
+
+      <label><i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
+        Resultado  <span ng-if='data'>para {{data}}</span>: {{(man_riesgos | filter: data).length }}</label>
+
+<table class="table table-striped table-condensed table-hover">
+    
+        <tbody>
+
+            <thead>
+
+            <tr>
+                
+                <th class="id_riesg__tipo_riesgo">Riesgo <a ng-click="sort_by('id_riesg__tipo_riesgo',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="id_model__id_modelo__name_model">Modelo <a ng-click="sort_by('id_model__id_modelo__name_model',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="id_model__id_clase__clase">Clase <a ng-click="sort_by('id_model__id_clase__clase',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="id_model__id_marca__name_marca">Marca <a ng-click="sort_by('id_model__id_marca__name_marca',currentPage)"><i class="icon-sort"></i></a></th>
+                <th class="aseguradora__name_asegurad">Aseguradora <a ng-click="sort_by('aseguradora__name_asegurad',currentPage)"><i class="icon-sort"></i></a></th>
+             
+                <th></th>
+                
+            
+                            
+            </tr>
+
+            </thead>
+
+
+            <tr  ng-repeat="contact in man_riesgos | filter: data" class='active' ts-repeat>
+
+                <td>{{contact.id_riesg__tipo_riesgo}}</td>
+                <td>{{contact.id_model__id_modelo__name_model}}</td>
+                <td>{{contact.id_model__id_tipo__clase}}</td>
+                <td>{{contact.id_model__id_marca__name_marca}}</td>
+                <td>{{contact.aseguradora__name_asegurad}}</td>
+                <td>
+                 <a ng-click="editar(contact)" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editriesg"><i class="fa fa-edit"></i></a>
+                 <a ng-click="eliminarries(contact)" class="btn btn-sm btn-primary" ><i class="fa fa-trash"></i></a>
+                </td>
+
+            </tr>
+        </tbody>
+
+
+        </table>
+				
+			
+
+	</body>
+</html>

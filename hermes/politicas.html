@@ -1,0 +1,298 @@
+<!DOCTYPE html> 
+<html ng-app="App">
+<head>
+  <title>Cotizador Web- Tasas</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="css/bootstrap.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+</head>
+
+<body class="bg-orange">
+
+  <ng-include src="'menu.html'"></ng-include>
+  
+
+
+
+  <div class="container">
+
+
+
+	  <h2>Politicas GPS</h2>
+	  <br>  
+
+	  <div class="btn-group">
+		  <button type="button" class="btn btn-default" ng-click='primerf()'>Primer Filtro</button>
+		  <button type="button" class="btn btn-default" ng-click='segundof()'>Segundo Filtro</button>
+
+	  </div>
+
+	<br></br>
+
+	  <ng-include src="'modales.html'"></ng-include> 
+
+
+	  <!--Primer FIltro-->   
+
+
+						<div class="jumbotron" ng-show='primerfiltro'>    
+
+									<form ng-submit="addpoliticagps(model)">
+
+
+											<div class='row'>
+
+												<div class="col-md-3">
+
+													<label>Aseguradora :</label><select multiple  ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="model.aseguradora" required =""  ></select>
+
+													</div>
+<!-- 
+												<div class="col-md-3">
+
+													<label>Modalidad :</label><select multiple ng-options="item as item.name_modalidad for item in modalidad track by item.id_modalidad" type="text" class="form-control" ng-model="model.modalidad" required =""  ></select>
+
+												</div>
+
+												<div class="col-md-3">
+
+													<label>Uso:</label>
+													<select multiple ng-options="item as item.uso for item in uso track by item.id_uso" type="text" class="form-control" ng-model="model.uso" required ="" ></select>
+
+												</div> -->
+
+												<div class="col-md-3">
+
+													<label>Anio :</label><select  multiple ng-options="item as item.anio_antig for item in anio track by item.id_anio" type="text" class="form-control" ng-model="model.anio" required =""  ><option></option></select>
+
+												</div>
+
+
+												<div class="col-md-3">
+
+														<label>Programa :</label><select multiple ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="model.programa" required =""  ><option></option></select>
+
+												</div>
+
+
+												<div class="col-md-3">
+
+												<label>Marca</label>
+
+												<div class="panel panel-success">
+												<input type="" class='form-control' name="" ng-model='marc'> 
+												<div class="fixed-panel" >   
+												<div class="checkbox" ng-repeat='contact in marcas | filter: marc'>
+												<label><input ng-click='traemodelo(contact)' ng-model='contact.master' type="checkbox" value="" >{{contact.name_marca}}</label>
+												</div>
+												</div>
+												</div>
+												</div>
+
+												<div class="col-md-3">
+
+														<label>Modelos <span ng-if='modelitos.length>0'>de  {{modelitos.length}} marcas </span></label>
+
+														<div class="panel panel-success">
+														<input type="" class='form-control' name="" ng-model='modelo'> 
+														<div class="fixed-panel" >   
+														<div class="checkbox" ng-repeat='contact in modelitos | filter: modelo'>
+
+														<label><i class="fa fa-car" aria-hidden="true"></i> {{contact[0].id_marca__name_marca}} 
+
+														<input type="checkbox" value="" ng-model='contact.checkmarca' ng-click='marcacheck(contact)'></label>
+
+														<div class="checkbox" ng-repeat='item in contact'>
+
+														<label><input type="checkbox" value="" ng-model='item.checkmodel'>{{item.model}}</label>
+
+														</div> 
+
+														</div>
+														</div>
+														</div>
+												</div>
+
+											
+												<div class="col-md-3">
+
+														<label>Valor:</label>
+														<select ng-model="model.value" value="Si" class="form-control"  required="">}
+														<option value='Si'>Si</option>
+
+														<!-- <option value='No'>No</option> -->
+
+														</select>
+
+												</div>
+
+
+											</div>
+
+											<br>
+
+											<button type='submit' class='btn btn-primary'>Agregar</button>
+
+									</form>
+
+						</div>
+
+
+
+	
+
+	<!--Segundo Filtro-->
+
+
+	<div class="jumbotron" ng-show='segundofiltro'>
+
+				<form ng-submit="addpoliticagps2(model,item)">
+
+						<div class='row'>
+
+										<div class="col-md-3">
+
+										<label>Aseguradora :</label><select multiple ng-options="item as item.name_asegurad for item in aseguradoras track by item.id_asegurad" type="text" class="form-control" ng-model="model.aseguradora" required =""  ></select>
+
+										</div>
+
+										<div class="col-md-3">
+
+
+												<label>Programa :</label><select multiple ng-options="item as item.program for item in programas track by item.id_program" type="text" class="form-control" ng-model="model.programa" required =""  ><option></option></select>
+
+										</div>
+
+										
+
+										
+
+										
+
+
+										<div class="col-md-3">
+
+												<label>Suma Asegurada Mínima</label>
+
+												<input  class='form-control' ng-model="model.sumaminima" class="form-control"></input>
+
+										</div>
+
+						</div>
+
+						
+
+						<button type='submit' class='btn btn-primary'>Agregar</button>
+
+				</form>
+
+	</div>
+
+
+
+<!--Filtro de Busqueda-->
+
+<div class='section '>
+	<i class="fa fa-filter" aria-hidden="true"></i>
+	<label for='filtro'>Filtro</label>
+
+	<div class='row'>
+		<div class='col-md-4'>
+			<input placeholder='Busqueda' ng-model='data' id='filtro' type="" class='form-control' name="">
+		</div>
+	</div>
+</div>
+
+<!--Contador-->
+
+<label><i class="fa fa-caret-square-o-right" aria-hidden="true"></i>
+	Resultado  <span ng-if='data'>para {{data}}</span>: {{(gps | filter: data).length }}</label>
+
+	
+	<h3 ng-show='procesando'>Procesando.... Please wait</h3>
+
+	<table class="table table-striped table-condensed table-hover">
+		
+		<tbody>
+
+			<thead>
+
+				<tr>
+					
+					<th ng-show='showase' class="id_aseg__name_asegurad">Aseguradora <a ng-click="sort_by('id_aseg__name_asegurad',currentPage)"><i class="icon-sort"></i></a></th>
+
+					<th ng-show='showprogram' class="modalidad__name_modalidad">Programa <a ng-click="sort_by('modalidad__name_modalidad',currentPage)"><i class="icon-sort"></i></a></th>
+
+					<th ng-show='showmarca' class="modalidad__name_modalidad">Marca <a ng-click="sort_by('modalidad__name_modalidad',currentPage)"><i class="icon-sort"></i></a></th>
+
+					<th ng-show='showmodelo' class="modalidad__name_modalidad">Modelo <a ng-click="sort_by('modalidad__name_modalidad',currentPage)"><i class="icon-sort"></i></a></th>
+
+					<!-- <th class="id_uso__uso" >Uso <a ng-click="sort_by('id_uso__uso',currentPage)"><i class="icon-sort"></i></a></th>
+ -->
+					<th ng-show='showanio' class="tipo__clase" >Anio <a ng-click="sort_by('tipo__clase',currentPage)"><i class="icon-sort"></i></a></th>
+
+					<th ng-show='showvalue' class="anio__anio_antig" >Value <a ng-click="sort_by('anio__anio_antig',currentPage)"><i class="icon-sort"></i></a></th>
+
+					<th ng-show='showsuma' class="anio__anio_antig" >Suma Minima <a ng-click="sort_by('anio__anio_antig',currentPage)"><i class="icon-sort"></i></a></th>
+
+
+					<th></th>
+					
+				</tr>
+
+			</thead>
+
+
+			<tr  ng-repeat="contact in gps | filter: data" class='active' ts-repeat>
+
+
+				<td ng-show='showase'>{{contact.id_aseg__name_asegurad}}</td>
+				
+				<td ng-show='showprogram'>{{contact.id_prog__program}}</td>
+
+				<td ng-show='showmarca' >{{contact.id_auto__id_marca__name_marca}}</td>
+
+				<td ng-show='showmodelo'>{{contact.id_auto__id_modelo__name_model}}</td>
+
+				<!-- <td>{{contact.id_uso__uso}}</td> -->
+
+				<td ng-show='showanio'>{{contact.anio_antig__anio_antig}}</td>
+				
+				<td ng-show='showvalue'>{{contact.value}}</td>
+
+				<td ng-show='showsuma'>{{contact.sumaminima}}</td>
+
+				<td>
+			   
+				<a ng-click="editar(contact)" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#editpolitica"><i class="fa fa-edit"></i></a>
+				 <a ng-click="eliminarpolitica(contact)" class="btn btn-sm btn-primary" ><i class="fa fa-trash"></i></a>
+			 </td>
+
+		 </tr>
+	 </tbody>
+
+
+ </table>
+ 
+ 
+
+</body>
+</html>
+
+
+
+
+
+
+<style type="text/css">
+	
+	.fixed-panel{
+		height:100px;
+		overflow-y:scroll;
+		padding: 2px;
+		padding-left:18px;
+	}
+
+</style>
