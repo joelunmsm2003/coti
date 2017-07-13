@@ -2834,6 +2834,10 @@ def fiiiii(request):
 	print 'financiamineto...........................',data
 
 	primarimac = data['mapfretotal']
+	primahdi = data['hditotal']
+	primapacifico = data['pacificototal']
+	primapositiva = data['positivatotal']
+	primamapfre =data['mapfretotal']
 
 	#{u'orderId': u'865', u'anio': u'29', u'tipo': u'1', u'uso': u'1', u'precio': u'250', u'marca': u'90', u'modelo': u'6800', u'programa': u'1z2z4z9', u'modalidad': u'2'}
 
@@ -2855,11 +2859,7 @@ def fiiiii(request):
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=4)
 
-		print 'cuota-tea',f.cuota,f.tea,primarimac
-
-		valor = round((primarimac*f.tea/100+primarimac)/int(f.cuota),2)
-
-		print 'valor....',valor
+		valor = round((primamapfre*f.tea/100+primamapfre)/int(f.cuota),2)
 
 		financiamiento[i]['mapfre'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
@@ -2877,7 +2877,7 @@ def fiiiii(request):
 
 		if int(f.cuota)>0:
 
-			valor = round((primarimac*f.tea/100+primarimac)/int(f.cuota),2)
+			valor = round((primapositiva*f.tea/100+primapositiva)/int(f.cuota),2)
 
 			financiamiento[i]['positiva'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
@@ -2891,7 +2891,7 @@ def fiiiii(request):
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=2)
 
-		valor = round((primarimac*f.tea/100+primarimac)/int(f.cuota),2)
+		valor = round((primapacifico*f.tea/100+primapacifico)/int(f.cuota),2)
 
 		financiamiento[i]['pacifico'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
@@ -2900,7 +2900,7 @@ def fiiiii(request):
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=3)
 
-		valor = round((primarimac*f.tea/100+primarimac)/int(f.cuota),2)
+		valor = round((primahdi*f.tea/100+primahdi)/int(f.cuota),2)
 
 		financiamiento[i]['hdi'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
