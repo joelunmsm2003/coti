@@ -656,6 +656,8 @@ $scope.items8 = [
         $routeParams.pacificototal  =$scope.pacificototal
         $routeParams.rimactotal=$scope.rimactotal
 
+        console.log('nuevas primas')
+
 
             $http({
 
