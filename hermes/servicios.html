@@ -97,6 +97,9 @@
                 
                 <th   class="id_serv__services">Servicio <a ng-click="sort_by('id_serv__services',currentPage)"><i class="icon-sort"></i></a></th>
                 <th class="id_aseg__name_asegurad">Aseguradora <a ng-click="sort_by('id_aseg__name_asegurad',currentPage)"><i class="icon-sort"></i></a></th>
+
+                <th>Uso</th>
+                <th>Programa</th>
            		<th class="valor">Valor<a ng-click="sort_by('valor',currentPage)"><i class="icon-sort"></i></a></th>
                 <th></th>
                             
@@ -109,6 +112,8 @@
 
 				<td>{{contact.id}}-{{contact.id_serv__services| limitTo: 40}}</td>
 				<td>{{contact.id_aseg__name_asegurad}}</td>
+                <td>{{contact.id_uso__uso}}</td>
+                <td>{{contact.id_program__program}}</td>
 				<td>{{contact.valor}}</td>
 
 

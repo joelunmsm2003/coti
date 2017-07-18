@@ -2,7 +2,7 @@
 
   
 
-    host ='http://192.168.40.231:8000'
+    host ='http://cotizador.hermes.pe:8000'
 
 
     module.config(['$routeProvider','$httpProvider',

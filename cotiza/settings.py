@@ -80,26 +80,26 @@ ROOT_URLCONF = 'cotiza.urls'
 WSGI_APPLICATION = 'cotiza.wsgi.application'
 
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql', 
-#         'NAME': 'cotizador',
-#         'USER': 'root',
-#         'PASSWORD': 'h3rm3$d4t4b4$3*',
-#         'HOST': '104.236.232.222', 
-#         'PORT': '3306',
-#     }
-# }
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'coti',
+        'NAME': 'coti2',
         'USER': 'root',
-        'PASSWORD': '123',
-        'HOST': '127.0.0.1', 
+        'PASSWORD': 'h3rm3$d4t4b4$3*',
+        'HOST': '104.236.232.222', 
         'PORT': '3306',
     }
 }
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql', 
+#         'NAME': 'coti',
+#         'USER': 'root',
+#         'PASSWORD': '123',
+#         'HOST': '127.0.0.1', 
+#         'PORT': '3306',
+#     }
+# }
 
 
 EMAIL_HOST = 'mail.hermes.pe'

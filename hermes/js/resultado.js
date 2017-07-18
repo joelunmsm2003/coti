@@ -218,6 +218,15 @@ $scope.items8 = [
     $scope.absUrl = $location.absUrl();
 
 
+    
+
+    if($scope.parametros.programa.split('z')[1]!='2' || $scope.parametros.programa.split('z')[1]!='25' || $scope.parametros.programa.split('z')[1]!='26'){
+
+        $scope.muestradescuento=false
+
+    }
+
+
 
     $scope.model = {}
     $scope.datamodel = {}
@@ -354,7 +363,7 @@ $scope.items8 = [
 
     }
 
-    $scope.muestradescuento = true
+
 
     $scope.programarimac = function (data) {
 
@@ -539,11 +548,11 @@ $scope.items8 = [
 
 
 
-        // $http.get(host+"/servic/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+"/").success(function(response) {
+        $http.get(host+"/servic/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.parametros.programa+"/").success(function(response) {
 
-        // $scope.servic = response;
+        $scope.servic = response;
 
-        // console.log('servic HDI',$scope.servic)
+        console.log('servic HDI',$scope.servic)
 
         // $http({
         //     url: host+"/recibeservicios/",
@@ -552,7 +561,7 @@ $scope.items8 = [
          
         //     })
 
-        // });
+        });
 
         /*
         $http.get(host+"/financ/").success(function(response) {

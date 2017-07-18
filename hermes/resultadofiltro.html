@@ -135,21 +135,19 @@
 
             <select  ng-if="model.tasarimac" ng-show='muestradescuento' ng-change='descuento(item)' ng-options="item as item.label for item in items track by item.id" ng-model="item"></select></th>
 
-
             <th style='background-color:#FF6601;'><span ng-if="model.tasapositiva">Tasa: {{model.tasapositiva}}%</span></th>
             <th style='background-color:#FF6601;'><span ng-if="model.tasapacifico"> Tasa : {{model.tasapacifico}}% </span></th>
             <th style='background-color:#FF6601;'><span ng-if="model.tasahdi"> Tasa : {{model.tasahdi}}% </span> </th>
-
             <tr>
 
             <!-- Perfil: {{perfil}}  -->
-
+<!-- 
             <td ng-if="perfil==1">Tasa</td>
             <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasamapfre' type="number" class='form-control'></td>
             <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasarimac' type="number" class='form-control'></td>
             <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasapositiva' type="number" class='form-control'></td>
             <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasapacifico' type="number" class='form-control'></td>
-            <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasahdi' type="number" class='form-control'></td>
+            <td ng-if="perfil==1"><input ng-change="calculo(model)" ng-model='model.tasahdi' type="number" class='form-control'></td> -->
             </tr>
 
             <tr >

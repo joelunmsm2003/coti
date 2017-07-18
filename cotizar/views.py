@@ -1807,7 +1807,7 @@ def serviciocsv(request,aseguradora):
 @csrf_exempt
 def tasascsv(request,aseguradora):
 
-	ta = TasaAsegur.objects.filter(id_aseg=aseguradora,programa_id=19)
+	ta = TasaAsegur.objects.filter(id_aseg=aseguradora)
 
 	response = HttpResponse(content_type='text/xls')
 
@@ -2833,7 +2833,7 @@ def fiiiii(request):
 
 	print 'financiamineto...........................',data
 
-	primarimac = data['mapfretotal']
+	primarimac = data['rimactotal']
 	primahdi = data['hditotal']
 	primapacifico = data['pacificototal']
 	primapositiva = data['positivatotal']
@@ -2851,10 +2851,6 @@ def fiiiii(request):
 
 	for i in range(len(financiamiento)):
 
-		
-
-
-
 		# Mapfre
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=4)
@@ -2863,15 +2859,19 @@ def fiiiii(request):
 
 		financiamiento[i]['mapfre'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
-		#Rimac
+		# Rimac
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=5)
 
+		print '-----',f.tea, f.cuota,primarimac*f.tea/100+primarimac
+
 		valor = round((primarimac*f.tea/100+primarimac)/int(f.cuota),2)
+
+		print valor
 
 		financiamiento[i]['rimac'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
-		#Postiva
+		# Postiva
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=1)
 
@@ -2886,8 +2886,7 @@ def fiiiii(request):
 
 			financiamiento[i]['positiva']='No Aplica'
 
-
-		#Pacifico
+		# Pacifico
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=2)
 
@@ -3108,6 +3107,12 @@ def primaneta(request,descuento):
 
 			## Corporativo
 
+			#Descuentsos Positiva
+
+			desposi10 = [6382,1029,1027,1025,1023,1021,1019,1017,6445,1030,1028,1026,1024,1022,1020,1018,1016,7861,1136,1134,7845,1132,7844,1135,1133,1130,1628,1131,1629,7878,8973,4724,567,566,866,864,865,863,567,566,866,883,4716,8342,1436,1434,1496,8341,1437,1435,1497,8342,1416,1414,1417,1415,8714,1281,1282,1280,8205,8236,8235,8234,8215,8222,8220,8218,8216,1263,8214,1261,1259,8223,8219,8217,1264,1262,1260,8242,1223,7994]
+
+
+
 			if int(programapositiva) ==4:
 
 				tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),riesgo_id=riesgopositiva,programa_id=4)
@@ -3142,6 +3147,10 @@ def primaneta(request,descuento):
 
 				aseguradora[i]['idriesgopositiva'] = riesgopositiva
 
+				aseguradora[i]['idriesgopositiva'] = riesgopositiva
+
+
+
 			else:
 
 				aseguradora[i]['positiva']='No Aplica'
@@ -3162,6 +3171,11 @@ def primaneta(request,descuento):
 			if usoname=='Taxi/Publico':
 
 				tasa = None
+
+			if tiponame =='Pick-UP':
+
+				tasa = TasaAsegur.objects.get(id_aseg_id=2,anio=int(anio),tipo__clase=tiponame)
+
 
 			if tasa !=None:
 
@@ -3589,6 +3603,14 @@ def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 
 			gpsmapfre = 'Si'
 
+		print 'id_auto',id_auto
+
+		ceratos=[1575,1573,1571,1569,1567,1565,1576,1574,1572,1570,6942,1568,1566,1564,6903,6918]
+
+		if str(id_auto in ceratos) == 'True':
+
+			gpsmapfre ='Si' 
+
 	## Dorada Pickup
 
 	pickma= [7669,7815,7817,7814]
@@ -3654,6 +3676,8 @@ def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 @csrf_exempt
 def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 
+	print 'modelo cob',modelo
+
 
 	tipo = AutoValor.objects.filter(id_modelo_id=modelo)
 
@@ -3694,15 +3718,15 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 	if RiesgAseg.objects.filter(aseguradora_id=1,id_model_id=modelo):
 
-		riesgopositiva = RiesgAseg.objects.get(aseguradora_id=1,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgopositiva = RiesgAseg.objects.get(aseguradora_id=1,id_model_id=modelo).id_riesg.tipo_riesgo
 	
 	if RiesgAseg.objects.filter(aseguradora_id=2,id_model_id=modelo):
 
-		riesgopacifico = RiesgAseg.objects.get(aseguradora_id=2,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgopacifico = RiesgAseg.objects.get(aseguradora_id=2,id_model_id=modelo).id_riesg.tipo_riesgo
 	
 	if RiesgAseg.objects.filter(aseguradora_id=4,id_model_id=modelo):
 	
-		riesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=modelo).id_riesg.tipo_riesgo
 	
 
 
@@ -3758,25 +3782,27 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 @csrf_exempt
 def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
-	tipo = AutoValor.objects.get(id_modelo_id=modelo)
+	print 'deuciblemodelo',modelo
+
+	tipo = AutoValor.objects.get(id=modelo)
 
 	riesgomapfre = 3
 
 	if RiesgAseg.objects.filter(aseguradora_id=1,id_model_id=modelo):
 
-		riesgopositiva = RiesgAseg.objects.get(aseguradora_id=1,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgopositiva = RiesgAseg.objects.get(aseguradora_id=1,id_model_id=modelo).id_riesg.tipo_riesgo
 	
 	if RiesgAseg.objects.filter(aseguradora_id=2,id_model_id=modelo):
 
-		riesgopacifico = RiesgAseg.objects.get(aseguradora_id=2,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgopacifico = RiesgAseg.objects.get(aseguradora_id=2,id_model_id=modelo).id_riesg.tipo_riesgo
 	
 	if RiesgAseg.objects.filter(aseguradora_id=4,id_model_id=modelo):
 	
-		riesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=modelo).id_riesg.tipo_riesgo
 	
 	if RiesgAseg.objects.filter(aseguradora_id=5,id_model_id=modelo):
 
-		riesgorimac = RiesgAseg.objects.get(aseguradora_id=5,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgorimac = RiesgAseg.objects.get(aseguradora_id=5,id_model_id=modelo).id_riesg.tipo_riesgo
 
 
 
