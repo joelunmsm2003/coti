@@ -1737,7 +1737,7 @@ def deduciblecsv(request,aseguradora):
 
 	response = HttpResponse(content_type='text/xls')
 
-	response['Content-Disposition'] = 'attachment; filename="Coberturas.csv"'
+	response['Content-Disposition'] = 'attachment; filename="Deducible.csv"'
 
 	writer = csv.writer(response)
 
@@ -1746,6 +1746,7 @@ def deduciblecsv(request,aseguradora):
 	writer.writerow(data)
 
 	for r in ta:
+		print 'ooo',r.id,r.id_deduc_id
 
 		if r.id_deduc_id:
 
@@ -1757,8 +1758,20 @@ def deduciblecsv(request,aseguradora):
 
 		r.value = r.value.encode('ascii','replace')
 
+		r.programa.program = r.programa.program.encode('ascii','ignore')
 
-		data = r.id_deduc_id,'|',r.id_deduc.deducible,'|',r.programa.program,'|',r.tipo.clase,'|',r.riesgo.tipo_riesgo,'|',r.value
+		r.programa.program = r.programa.program.encode('ascii','replace')
+
+		r.tipo.clase= r.tipo.clase.encode('ascii','ignore')
+
+		r.tipo.clase= r.tipo.clase.encode('ascii','replace')
+
+		r.riesgo.tipo_riesgo= r.riesgo.tipo_riesgo.encode('ascii','ignore')
+
+		r.riesgo.tipo_riesgo= r.riesgo.tipo_riesgo.encode('ascii','replace')
+
+
+		data = r.id_deduc_id,'@',r.id_deduc.deducible,'@',r.programa.program,'@',r.tipo.clase,'@',r.riesgo.tipo_riesgo,'@',r.id_uso.uso,'@',r.value
 
 
 		#data = t.id_aseg.name_asegurad,programa,riesgo,uso,tipo,marca,modelo,categoria,t.origen,t.ubicacion,t.anio,t.value
@@ -2831,7 +2844,6 @@ def fiiiii(request):
 
 	data = json.loads(request.body)
 
-	print 'financiamineto...........................',data
 
 	primarimac = data['mapfretotal']
 	primahdi = data['hditotal']
@@ -3758,25 +3770,30 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 @csrf_exempt
 def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
+	print 'modelo',modelo
+
 	tipo = AutoValor.objects.get(id_modelo_id=modelo)
 
-	riesgomapfre = 3
+	id_auto_valor = AutoValor.objects.get(id_modelo_id=modelo).id
 
-	if RiesgAseg.objects.filter(aseguradora_id=1,id_model_id=modelo):
+	riesgorimac = 3
 
-		riesgopositiva = RiesgAseg.objects.get(aseguradora_id=1,id_model_id=modelo).id_riesg__tipo_riesgo
-	
-	if RiesgAseg.objects.filter(aseguradora_id=2,id_model_id=modelo):
+	if RiesgAseg.objects.filter(aseguradora_id=1,id_model_id=id_auto_valor):
 
-		riesgopacifico = RiesgAseg.objects.get(aseguradora_id=2,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgopositiva = RiesgAseg.objects.get(aseguradora_id=1,id_model_id=id_auto_valor).id_riesg.id_riesgo
 	
-	if RiesgAseg.objects.filter(aseguradora_id=4,id_model_id=modelo):
-	
-		riesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=modelo).id_riesg__tipo_riesgo
-	
-	if RiesgAseg.objects.filter(aseguradora_id=5,id_model_id=modelo):
+	if RiesgAseg.objects.filter(aseguradora_id=2,id_model_id=id_auto_valor):
 
-		riesgorimac = RiesgAseg.objects.get(aseguradora_id=5,id_model_id=modelo).id_riesg__tipo_riesgo
+		riesgopacifico = RiesgAseg.objects.get(aseguradora_id=2,id_model_id=id_auto_valor).id_riesg.id_riesgo
+
+	if RiesgAseg.objects.filter(aseguradora_id=4,id_model_id=id_auto_valor):
+
+		riesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=id_auto_valor).id_riesg.id_riesgo
+	
+	if RiesgAseg.objects.filter(aseguradora_id=5,id_model_id=id_auto_valor):
+
+		riesgorimac = RiesgAseg.objects.get(aseguradora_id=5,id_model_id=id_auto_valor).id_riesg.id_riesgo
+
 
 
 
@@ -3788,6 +3805,7 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 	promapfre = pro[0]
 	propositiva = pro[2]
 	prorimac = pro[1]
+
 
 	
 	deducible = Deducibles.objects.all().values('id_deduc','deducible').order_by('id_deduc')
@@ -3801,9 +3819,11 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 	for i in range(len(deducible)):
 
 
-		# if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso).count()==1:
+		if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso,tipo__id_clase=tipo).count()>0:
 
-		# 	deducible[i]['hdi'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso).value
+			deducible[i]['hdi'] = DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso,tipo__id_clase=tipo).values('value')[0]['value']
+
+			#deducible[i]['hdi'] = DeducAsegur.objects.get(riesgo_id=riesgohdi,id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso,tipo__id_clase=tipo).value
 
 		# p= DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,id_uso=uso,modalidad_id=modalidad,programa_id=propositiva,tipo_id=tipo).values('id_deduc__deducible')
 
@@ -3819,24 +3839,29 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 		# p = DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre,id_uso_id=uso,riesgo_id=riesgomapfre,tipo_id=tipo).values('id_deduc__deducible')
 
-
-		# if p.count()==1:
 		
-		# 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre,id_uso_id=uso,riesgo_id=riesgomapfre,tipo_id=tipo).value
-	
-		## Deduciblr rimac
+		## Mapfre
+
+		if int(promapfre) == 1:
+
+			if DeducAsegur.objects.filter(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
+
+			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],tipo__id_clase=tipo,id_aseg_id=4,programa_id=promapfre).value
+			
+
+		## Deducible rimac
 
 		if int(prorimac) == 2:
 
-			if DeducAsegur.objects.filter(riesgo_id=riesgorimac,deduc=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()==1:
+			if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()>0:
 			
-				deducible[i]['rimac'] = DeducAsegur.objects.get(riesgo_id=riesgorimac,deduc=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
+				deducible[i]['rimac'] = DeducAsegur.objects.get(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
 			
 			if int(tipo)==6:
 
-				if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()==1:
+				if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()==1:
 				
-					deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
+					deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
 				
 
 

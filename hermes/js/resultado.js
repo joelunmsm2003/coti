@@ -569,6 +569,8 @@ $scope.items8 = [
 
         $scope.deducible = response;
 
+        console.log('deducible...',$scope.deducible)
+
           // $http({
           //   url: host+"/recibededucibles/",
           //   data: $scope.deducible,
