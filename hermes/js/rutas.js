@@ -1,4 +1,4 @@
-    var module = angular.module("App", ['ngRoute','elif','ngStorage','ngMap']);
+    var module = angular.module("App", ['ngRoute','elif','ngStorage','ngMap','ngSanitize']);
 
   
 

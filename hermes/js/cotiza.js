@@ -409,10 +409,10 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
       /// Trae Programas
 
 
+      console.log('model.anio......',model.anio)
 
 
-
-      $http.get(host+"/asegprogram/"+4+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio).success(function(response) {
+      $http.get(host+"/asegprogram/"+4+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio+'/'+model.anio.id_anio).success(function(response) {
 
 
         $scope.pm = response; 
@@ -427,7 +427,9 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
             $scope.pm = $scope.pm[0].id_prog
         }
 
-        $http.get(host+"/asegprogram/"+5+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio).success(function(response) {
+
+
+        $http.get(host+"/asegprogram/"+5+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio+'/'+model.anio.id_anio).success(function(response) {
 
                 $scope.pr = response; 
 
@@ -443,7 +445,7 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
                 }
 
 
-                   $http.get(host+"/asegprogram/"+1+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio).success(function(response) {
+                   $http.get(host+"/asegprogram/"+1+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio+'/'+model.anio.id_anio).success(function(response) {
 
 
                     $scope.pp = response; 

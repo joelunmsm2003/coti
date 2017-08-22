@@ -1606,7 +1606,7 @@ def gpscsv(request,aseguradora):
 
 	for r in g:
 
-		print r.id_auto_id
+
 
 		datos= r.id_auto_id,r.id_auto.id_marca.name_marca,r.id_auto.id_modelo.name_model,r.id_auto.id_tipo.clase,r.value
 
@@ -1694,7 +1694,7 @@ def coberturacsv(request,aseguradora):
 
 	ta = CobertAsegur.objects.all()
 
-	response = HttpResponse(content_type='text/xls')
+	response = HttpResponse(content_type='text/csv')
 
 	response['Content-Disposition'] = 'attachment; filename="Coberturas.csv"'
 
@@ -1706,7 +1706,7 @@ def coberturacsv(request,aseguradora):
 
 	for r in ta:
 
-		print r.id_cob_id
+
 
 		if r.id_cob_id:
 
@@ -1719,7 +1719,7 @@ def coberturacsv(request,aseguradora):
 		r.value = r.value.encode('ascii','replace')
 
 
-		data = r.id_cob_id,'|',r.id_cob.descripcion,'|',r.programa.program,'|',r.tipo.clase,'|',r.value
+		data = r.id_cob_id,r.id_cob.descripcion.replace(',',''),r.programa.program,r.tipo.clase,r.value.replace(',','')
 
 
 		#data = t.id_aseg.name_asegurad,programa,riesgo,uso,tipo,marca,modelo,categoria,t.origen,t.ubicacion,t.anio,t.value
@@ -1746,7 +1746,7 @@ def deduciblecsv(request,aseguradora):
 	writer.writerow(data)
 
 	for r in ta:
-		print 'ooo',r.id,r.id_deduc_id
+
 
 		if r.id_deduc_id:
 
@@ -1771,7 +1771,7 @@ def deduciblecsv(request,aseguradora):
 		r.riesgo.tipo_riesgo= r.riesgo.tipo_riesgo.encode('ascii','replace')
 
 
-		data = r.id_deduc_id,'@',r.id_deduc.deducible,'@',r.programa.program,'@',r.tipo.clase,'@',r.riesgo.tipo_riesgo,'@',r.id_uso.uso,'@',r.value
+		data = r.id_deduc_id,r.id_deduc.deducible.replace(",",""),r.programa.program.replace(",",""),r.tipo.clase,r.riesgo.tipo_riesgo,r.id_uso.uso,r.value.replace(",","")
 
 
 		#data = t.id_aseg.name_asegurad,programa,riesgo,uso,tipo,marca,modelo,categoria,t.origen,t.ubicacion,t.anio,t.value
@@ -1783,19 +1783,23 @@ def deduciblecsv(request,aseguradora):
 @csrf_exempt
 def serviciocsv(request,aseguradora):
 
-	ta = ServicAsegur.objects.filter(id_aseg=aseguradora)
+	ta = ServicAsegur.objects.all()
 
 	response = HttpResponse(content_type='text/xls')
 
-	response['Content-Disposition'] = 'attachment; filename="Coberturas.csv"'
+	response['Content-Disposition'] = 'attachment; filename="Servicio.csv"'
 
 	writer = csv.writer(response)
 
-	data = 'Cobertura','Programa'
+	data = 'Aseguradora','Servicio','Programa','Uso','Valor'
 
 	writer.writerow(data)
 
 	for r in ta:
+
+
+		programa = None
+		uso = None
 
 		if r.id_serv_id:
 
@@ -1803,12 +1807,23 @@ def serviciocsv(request,aseguradora):
 
 			r.id_serv.services = r.id_serv.services.encode('ascii','replace')
 
-		r.value = r.value.encode('ascii','ignore')
+		if r.id_program_id:
 
-		r.value = r.value.encode('ascii','replace')
+			programa= r.id_program.program
+
+		if r.id_uso_id:
+
+			uso = r.id_uso.uso
+
+		r.valor = r.valor.encode('ascii','ignore')
+
+		r.valor = r.valor.encode('ascii','replace')
 
 
-		data = r.id_serv_id,'|',r.id_serv.services,'|',r.id_program.program,'|',r.tipo.clase,'|',r.value
+
+
+
+		data = r.id_aseg.name_asegurad,r.id_serv.services,programa,uso,r.valor.replace(',','')
 
 
 		#data = t.id_aseg.name_asegurad,programa,riesgo,uso,tipo,marca,modelo,categoria,t.origen,t.ubicacion,t.anio,t.value
@@ -2154,7 +2169,6 @@ def exportardeducible(request,data):
 
 			writer = csv.writer(response)
 
-
 			for x in c:
 
 				#x['text_message'] = x['text_message'].encode('ascii','ignore')
@@ -2163,10 +2177,7 @@ def exportardeducible(request,data):
 
 				datos = x['riesgo__tipo_riesgo'],x['programa__program'],x['id_deduc__deducible'],x['id_aseg__name_asegurad'],x['id_uso__uso'],x['tipo__clase'],x['value'],x['modalidad__name_modalidad'],x['value']
 
-
 				writer.writerow([datos])
-
-
 
 			return response
 
@@ -2347,6 +2358,35 @@ def customers(request):
 
 	return HttpResponse(data, content_type="application/json")
 
+@csrf_exempt
+def descuentopositiva(request,marca,modelo,clase,uso,riesgo):
+
+
+	id_auto_valor = AutoValor.objects.get(id_modelo_id=modelo,id_marca_id=marca,id_tipo_id=clase).id
+
+	desposi10 = [6382,1029,1027,1025,1023,1021,1019,1017,6445,1030,1028,1026,1024,1022,1020,1018,1016,7861,1136,1134,7845,1132,7844,1135,1133,1130,1628,1131,1629,7878,8973,4724,567,566,866,864,865,863,567,566,866,883,4716,8342,1436,1434,1496,8341,1437,1435,1497,8342,1416,1414,1417,1415,8714,1281,1282,1280,8205,8236,8235,8234,8215,8222,8220,8218,8216,1263,8214,1261,1259,8223,8219,8217,1264,1262,1260,8242,1223,7994]
+
+	data={'descuento10':'No','descuento15':'No'}
+
+	if str(id_auto_valor in desposi10) == 'True':
+
+		data={'descuento10':'Si','descuento15':'No'}
+
+	if int(uso) == 1 and (int(riesgo)==3 or int(riesgo)==2 or int(clase)==6):
+
+		data={'descuento10':'No','descuento15':'Si'}
+
+	if int(uso) == 2 and (int(riesgo)==3 or int(riesgo)==2 or int(clase)==6):
+
+		data={'descuento10':'No','descuento15':'Si'}
+
+
+	data = json.dumps(data)
+
+
+	return HttpResponse(data, content_type="application/json")
+
+
 
 @csrf_exempt
 def listparametros(request):
@@ -2387,8 +2427,11 @@ def addigv(request):
 
 
 @csrf_exempt
-def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
+def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio,anio):
 
+	anio = Anio.objects.get(id_anio=anio).anio_antig
+
+	difanio =  int(datetime.datetime.now().year)-anio
 
 	aseg = ProgAseg.objects.filter(id_aseg_id=aseguradora).values('id_prog','id_prog__program').order_by('id_prog__program')
 
@@ -2408,14 +2451,11 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
 
 		progrimac =[]
 
-
-
 		traccion = AutoValor.objects.filter(id_modelo_id=modelo,id_marca_id=marca,id_tipo_id=tipo,traccion=1).count()
 
 		if traccion>0 and usoname=='Particular':
 
 			progrimac.append(7)
-
 
 		if int(uso) == 1: #Particular
 
@@ -2429,11 +2469,17 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
 
 			progrimac.append(6)
 
-			progrimac.remove(2)
+			if 2 in progrimac:
 
-			progrimac.remove(25)
+				progrimac.remove(2)
 
-			progrimac.remove(26)
+			if 25 in progrimac:
+
+				progrimac.remove(25)
+
+			if 26 in progrimac:
+
+				progrimac.remove(26)
 
 		if int(uso) == 20: # Taxis
 
@@ -2459,15 +2505,19 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
 
 			restringido =True
 
-
 		if (int(precio) >= 75000 and int(precio)<=4000) or origenname=='Chino' or restringido==True or (tiponame=='Van' and usoname=='Particular'):
 
+			if 2 in progrimac:
 
-			progrimac.remove(2)
+				progrimac.remove(2)
 
-			progrimac.remove(25)
+			if 25 in progrimac:
 
-			progrimac.remove(26)
+				progrimac.remove(25)
+
+			if 26 in progrimac:
+
+				progrimac.remove(26)
 
 		if int(precio)>60000 and tiponame=='Pick-UP':
 
@@ -2482,6 +2532,30 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
 		if (tiponame =='Microbus' or tiponame=='Omnibus' or tiponame=='Camion' or usoname=='Taxi/Publico' or int(precio)>=60000) and origenname=='Chino':
 
 			progrimac.remove(10)
+
+		vehicularpickup=[8376,1374,1377,1375,1373,1378,1376,8381,8382,8380,6925,7783,7629,7691,7815,7814,8711,6370]
+
+		if str(id_auto_valor in vehicularpickup) == 'True':
+
+			progrimac.append(6)
+
+			if 2 in progrimac:
+
+				progrimac.remove(2)
+
+			if 7 in progrimac:
+
+				progrimac.remove(7)
+
+
+			if int(difanio) > 3:
+
+				progrimac.append(2)
+
+				progrimac.append(7)
+
+				progrimac.remove(6)
+
 
 		aseg = ProgAseg.objects.filter(id_aseg_id=aseguradora,id_prog_id__in=progrimac).values('id_prog','id_prog__program')
 
@@ -2556,7 +2630,7 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
 
 		## Dorada Economica
 
-		if marcaname == 'TOYOTA' or marcaname =='NISSAN' or marcaname=='KIA' or marcaname=='CHEVROLET' or marcaname =='GEELY' or marcaname=='LIFAN' or marcaname=='CHERY' or marcaname=='GREAT WALL' or marcaname=='JAC' or marcaname=='INCAPOWER' or marcaname=='BYD' or marcaname=='CHANGE' or marcaname=='HAFEI':
+		if marcaname == 'TOYOTA' or marcaname =='NISSAN' or marcaname=='KIA' or marcaname=='CHEVROLET' or marcaname =='GEELY' or marcaname=='LIFAN' or marcaname=='CHERY' or marcaname=='GREAT WALL' or marcaname=='JAC' or marcaname=='INCAPOWER' or marcaname=='BYD' or marcaname=='CHANGE' or marcaname=='HAFEI' or marcaname=='HYUNDAI':
 
 			if (tiponame=='Auto' and usoname=='Particular') or (tiponame=='Station Wagon' and usoname=='Particular') or (tiponame=='Rural' and usoname=='Particular') :
 
@@ -2570,9 +2644,15 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
 
 				prog.append(5)
 
+			if int(difanio)<3:
+
+				if 5 in prog:
+
+					prog.remove(5)
+
 		## Dorada Pickup
 
-		if (tiponame == 'Pick-UP' and usoname =='Particular') or usoname=='Comercial' or usoname =='Transporte de Personal, Turistico, Escolar':
+		if (tiponame == 'Pick-UP') and (usoname =='Particular' or usoname=='Comercial' or usoname =='Transporte de Personal, Turistico, Escolar'):
 
 			prog.append(22)
 
@@ -2587,11 +2667,24 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio):
 
 			prog.remove(21)
 
+		if tiponame == 'Rural' and usoname=='Taxi/Publico':
+
+			if 1 in prog:
+
+				prog.remove(1)
+
+			if 24 in prog:
+
+				prog.remove(24)
+
 		## Program Transporte Personal
 
-		if (tiponame == 'Rural' or tiponame == 'Omnibus' or tiponame=='Microbus') and usoname=='Transporte de Personal, Turistico, Escolar':
+		
 
-			prog.append(19)
+		if (tiponame == 'Van' or tiponame == 'Rural' or tiponame == 'Omnibus' or tiponame=='Microbus') and usoname=='Transporte de Personal, Turistico, Escolar':
+
+			prog.append(34)
+
 
 
 
@@ -2844,12 +2937,38 @@ def fiiiii(request):
 
 	data = json.loads(request.body)
 
+	primahdi = None
+	primapacifico = None
+	primapositiva = None
+	primarimac = None
+	primamapfre = None
 
-	primarimac = data['rimactotal']
-	primahdi = data['hditotal']
-	primapacifico = data['pacificototal']
-	primapositiva = data['positivatotal']
-	primamapfre =data['mapfretotal']
+	for d in data:
+
+		if d == 'hditotal':
+
+			primahdi = data['hditotal']
+
+		if d=='pacificototal':
+
+			primapacifico = data['pacificototal']
+
+		if d=='positivatotal':
+
+			primapositiva = data['positivatotal']
+
+		if d=='rimactotal':
+
+			primarimac = data['rimactotal']
+
+		if d=='mapfretotal':
+
+			primamapfre = data['mapfretotal']
+
+
+
+
+
 
 	#{u'orderId': u'865', u'anio': u'29', u'tipo': u'1', u'uso': u'1', u'precio': u'250', u'marca': u'90', u'modelo': u'6800', u'programa': u'1z2z4z9', u'modalidad': u'2'}
 
@@ -2873,21 +2992,23 @@ def fiiiii(request):
 
 		# Rimac
 
-		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=5)
+		if primarimac:
 
-		print '-----',f.tea, f.cuota,primarimac*f.tea/100+primarimac
+			f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=5)
 
-		valor = round((primarimac*f.tea/100+primarimac)/int(f.cuota),2)
+			valor = round((primarimac*f.tea/100+primarimac)/int(f.cuota),2)
 
-		print valor
+			financiamiento[i]['rimac'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
-		financiamiento[i]['rimac'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
+		else:
 
-		# Postiva
+			financiamiento[i]['rimac'] = None
+
+		# Positiva
 
 		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=1)
 
-		if int(f.cuota)>0:
+		if int(f.cuota)>0 and primapositiva:
 
 			valor = round((primapositiva*f.tea/100+primapositiva)/int(f.cuota),2)
 
@@ -2900,22 +3021,36 @@ def fiiiii(request):
 
 		# Pacifico
 
-		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=2)
+		if primapacifico:
 
-		valor = round((primapacifico*f.tea/100+primapacifico)/int(f.cuota),2)
+			f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=2)
 
-		financiamiento[i]['pacifico'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
+			valor = round((primapacifico*f.tea/100+primapacifico)/int(f.cuota),2)
+
+			financiamiento[i]['pacifico'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
+
+		else:
+
+			valor=None
+
+			financiamiento[i]['pacifico']=None
 
 
 		#HDI
 
-		f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=3)
+		if primahdi:
 
-		valor = round((primahdi*f.tea/100+primahdi)/int(f.cuota),2)
+			f=FinanAsegu.objects.get(id_finan_id=financiamiento[i]['id_financ'],id_aseg_id=3)
 
-		financiamiento[i]['hdi'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
+			valor = round((primahdi*f.tea/100+primahdi)/int(f.cuota),2)
 
+			financiamiento[i]['hdi'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
 
+		else:
+
+			valor=None
+
+			financiamiento[i]['hdi']=None
 
 
 	data_dict = ValuesQuerySetToDict(financiamiento)
@@ -2926,7 +3061,7 @@ def fiiiii(request):
 
 
 @csrf_exempt
-def primaneta(request,descuento):
+def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 	data = json.loads(request.body)
 
@@ -3013,6 +3148,12 @@ def primaneta(request,descuento):
 
 			nameriesgohdi = 'Pick Up S/.1,100'
 
+		if origenname =='Chino':
+
+			nameriesgohdi = 'Cat. I S/.700'
+
+
+
 
 	if RiesgAseg.objects.filter(aseguradora_id=5,id_model_id=id_auto_valor):
 
@@ -3026,13 +3167,19 @@ def primaneta(request,descuento):
 
 			nameriesgorimac ='Alto Riesgo I'
 
+	if int(AutoValor.objects.get(id=id_auto_valor).mapfretaxialto)==1:
+
+			riesgomapfre= 1
+
+			nameriesgomapfre ='Alto Riesgo'
+
 	if RiesgAseg.objects.filter(aseguradora_id=4,id_model_id=id_auto_valor):
 
 		riesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=id_auto_valor).id_riesg.id_riesgo
 
 		nameriesgomapfre = RiesgAseg.objects.get(aseguradora_id=4,id_model_id=id_auto_valor).id_riesg.tipo_riesgo
 
-		print 'riesgomapfre',riesgomapfre
+
 
 	if RiesgAseg.objects.filter(aseguradora_id=1,id_model_id=id_auto_valor):
 
@@ -3040,7 +3187,6 @@ def primaneta(request,descuento):
 
 		nameriesgopositiva = RiesgAseg.objects.get(aseguradora_id=1,id_model_id=id_auto_valor).id_riesg.tipo_riesgo
 
-	print 'id_auto_valor',id_auto_valor
 
 	if RiesgAseg.objects.filter(aseguradora_id=2,id_model_id=id_auto_valor):
 
@@ -3065,8 +3211,6 @@ def primaneta(request,descuento):
 		if aseguradora[i]['id_asegurad'] == 1:
 
 			tasa = None
-
-
 
 			## Programa Taxi
 
@@ -3108,8 +3252,9 @@ def primaneta(request,descuento):
 
 			if int(programapositiva) ==30:
 
-				tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),programa_id=programapositiva)
+				#tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),programa_id=programapositiva)
 
+				tasa = None
 			#Uso Carga
 
 			if int(programapositiva) ==31:
@@ -3121,8 +3266,7 @@ def primaneta(request,descuento):
 
 			#Descuentsos Positiva
 
-			desposi10 = [6382,1029,1027,1025,1023,1021,1019,1017,6445,1030,1028,1026,1024,1022,1020,1018,1016,7861,1136,1134,7845,1132,7844,1135,1133,1130,1628,1131,1629,7878,8973,4724,567,566,866,864,865,863,567,566,866,883,4716,8342,1436,1434,1496,8341,1437,1435,1497,8342,1416,1414,1417,1415,8714,1281,1282,1280,8205,8236,8235,8234,8215,8222,8220,8218,8216,1263,8214,1261,1259,8223,8219,8217,1264,1262,1260,8242,1223,7994]
-
+			
 
 
 			if int(programapositiva) ==4:
@@ -3147,9 +3291,83 @@ def primaneta(request,descuento):
 
 			if tasa !=None:
 
-				aseguradora[i]['tasapositiva'] = round(float(tasa.value),2)
+				aseguradora[i]['tasapositiva'] = round(float(tasa.value)*int(descuentopositiva)/100,2)
 				
 				aseguradora[i]['positiva'] = round(aseguradora[i]['tasapositiva']*float(monto)/100,2)
+
+				### Primas Minimas Positiva
+
+				if int(aseguradora[i]['positiva']) <= 350 and usoname=='Particular':
+
+					aseguradora[i]['positiva'] = 350
+
+				if int(aseguradora[i]['positiva']) <= 350 and usoname=='Comercial':
+
+					aseguradora[i]['positiva'] = 350
+
+				if int(aseguradora[i]['positiva']) <= 650 and usoname=='Urbano' and origenname=='Chino':
+
+					aseguradora[i]['positiva'] = 650
+
+				if int(aseguradora[i]['positiva']) <= 550 and usoname=='Urbano' and origenname!='Chino':
+
+					aseguradora[i]['positiva'] = 550
+
+				if int(aseguradora[i]['positiva']) <= 400 and usoname=='Carga':
+
+					if tiponame =='Volquete' or tiponame=='Camion':
+
+						aseguradora[i]['positiva'] = 400
+
+					else:
+
+						aseguradora[i]['positiva'] = 500
+
+				if int(aseguradora[i]['positiva']) <= 800 and usoname=='Interprovincial':
+
+					aseguradora[i]['positiva'] = 800	
+
+				if int(aseguradora[i]['positiva']) <= 700 and usoname=='Alquiler':
+
+					aseguradora[i]['positiva'] = 700
+
+				if int(aseguradora[i]['positiva']) <= 700 and usoname=='Transporte de Personal, Turistico, Escolar':
+
+					aseguradora[i]['positiva'] = 700
+
+				if int(aseguradora[i]['positiva']) <= 500 and usoname=='Ambulancia':
+
+					aseguradora[i]['positiva'] = 500
+
+				if int(aseguradora[i]['positiva']) <= 550 and usoname=='Brevete':
+
+					aseguradora[i]['positiva'] = 550
+
+				if int(aseguradora[i]['positiva']) <= 550 and usoname=='Brevete':
+
+					aseguradora[i]['positiva'] = 550
+
+				if int(aseguradora[i]['positiva']) <= 260 and usoname=='Traslado':
+
+					if usoname =='Particular':
+
+						aseguradora[i]['positiva'] = 260
+
+				if int(aseguradora[i]['positiva']) <= 350 and usoname=='Traslado':
+
+					aseguradora[i]['positiva'] = 350
+
+					if usoname =='Carga':
+
+						aseguradora[i]['positiva'] = 350
+
+
+				##Fin Primas Minimas Positiva 
+
+
+
+
+
 
 				aseguradora[i]['positivasubtotal'] = round((aseguradora[i]['positiva'] + 3*aseguradora[i]['positiva']/100),2)
 
@@ -3195,6 +3413,17 @@ def primaneta(request,descuento):
 				
 				aseguradora[i]['pacifico'] = round(aseguradora[i]['tasapacifico']*float(monto)/100,2)
 
+				if int(aseguradora[i]['pacifico']) <= 350:
+
+					aseguradora[i]['pacifico']= 350
+
+				if tiponame =='Pick-UP':
+
+					if int(aseguradora[i]['pacifico']) <= 400:
+
+						aseguradora[i]['pacifico']= 400
+
+
 				aseguradora[i]['pacificosubtotal'] = round((aseguradora[i]['pacifico'] + 3*aseguradora[i]['pacifico']/100),2)
 
 				aseguradora[i]['pacificototal'] = round((aseguradora[i]['pacificosubtotal']+18*aseguradora[i]['pacificosubtotal']/100),2)
@@ -3227,6 +3456,10 @@ def primaneta(request,descuento):
 				
 				aseguradora[i]['hdi'] = round(aseguradora[i]['tasahdi']*float(monto)*3.25/100,2)
 
+				if int(aseguradora[i]['hdi']) <= 1200:
+
+					aseguradora[i]['hdi'] =1200
+
 				aseguradora[i]['hdisubtotal'] = round((aseguradora[i]['hdi'] + 3*aseguradora[i]['hdi']/100),2)
 
 				aseguradora[i]['hditotal'] = round((aseguradora[i]['hdisubtotal']+18*aseguradora[i]['hdisubtotal']/100),2)
@@ -3245,6 +3478,8 @@ def primaneta(request,descuento):
 
 			tasa = None
 
+			# Dorada
+
 			if int(programamapfre)==1:
 
 				if TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),riesgo_id=riesgomapfre,programa_id=programamapfre).count()>0:
@@ -3255,19 +3490,47 @@ def primaneta(request,descuento):
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),origen='Chino',programa_id=programamapfre)
 
+			# Dorada x2
+
+			if int(programamapfre)==24:
+
+				programamapfre = 1
+
+				if TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),riesgo_id=riesgomapfre,programa_id=programamapfre).count()>0:
+
+					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),riesgo_id=riesgomapfre,programa_id=programamapfre)
+
+				if origenname == 'Chino':
+
+					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),origen='Chino',programa_id=programamapfre)
+
+			# Dorada PickUp
+
 			if int(programamapfre)==22:
 
-				print 'usoname,programamapfre,origen',usoname,programamapfre
 
-				tasa = TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),id_uso__uso=usoname,programa_id=programamapfre).exclude(origen='Chino')[0]
+				if TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),programa_id=programamapfre).exclude(origen='Chino').count()>0:
 
-				print tasa
+					tasa = TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),programa_id=programamapfre).exclude(origen='Chino')[0]
 
 				if origenname == 'Chino':
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),origen='Chino',id_uso__uso=usoname,programa_id=programamapfre)
 				
+				if usoname == 'Alquiler':
+
+					tasa = TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),origen='Chino',id_uso__uso=usoname,programa_id=programamapfre).exclude(origen='Chino')[0]
+				
+				if usoname == 'Comercial':
+
+					tasa = TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),id_uso__uso=usoname,programa_id=programamapfre)[0]
+				
+
+
+
+
 			if int(programamapfre)==5:
+
 
 				tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),riesgo_id=riesgomapfre,programa_id=programamapfre)
 
@@ -3325,9 +3588,23 @@ def primaneta(request,descuento):
 
 			if tasa !=None:
 
-				aseguradora[i]['tasamapfre'] = round(float(tasa.value),2)
+				aseguradora[i]['tasamapfre'] = round(float(tasa.value)*int(descuentomapfre)/100,2)
+
+				if int(programamapfre)==24:
+
+					aseguradora[i]['tasamapfre'] = round(float(tasa.value*2)*int(descuentomapfre)/100,2)
 				
 				aseguradora[i]['mapfre'] = round(aseguradora[i]['tasamapfre']*float(monto)/100,2)
+
+
+				if int(aseguradora[i]['mapfre']) <= 350:
+
+					aseguradora[i]['mapfre']= 350
+
+				if int(aseguradora[i]['mapfre']) <= 375  and tiponame =='Pick-UP':
+
+					aseguradora[i]['mapfre']= 375
+
 
 				aseguradora[i]['mapfresubtotal'] = round((aseguradora[i]['mapfre'] + 3*aseguradora[i]['mapfre']/100),2)
 
@@ -3416,9 +3693,13 @@ def primaneta(request,descuento):
 
 			if int(programarimac) == 12:
 
-				if 'H1' in modeloname:
 
-					tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),modelo__name_model__contains='H1',programa_id=programarimac)
+
+				#tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),programa_id=programarimac).exclude(tipo__clase='Panel')
+
+				if 'H-1' in modelname:
+
+					tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),modelo__id_modelo__name_model__contains='H-1',programa_id=programarimac)
 
 				if tiponame == 'Panel':
 
@@ -3430,15 +3711,13 @@ def primaneta(request,descuento):
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),tipo__clase='Camion',programa_id=programarimac)
 
-
-
 			if tasa != None:
 
 				aseguradora[i]['tasarimac'] = round(float(tasa.value)*int(descuento)/100,2)
 				
 				aseguradora[i]['rimac'] = round(aseguradora[i]['tasarimac']*float(monto)/100,2)
 
-				if int(monto) <= 350:
+				if int(aseguradora[i]['rimac']) <= 350:
 
 					if nameriesgorimac =='Bajo Riesgo I' or nameriesgorimac=='Bajo Riesgo II' or nameriesgorimac =='Alto Riesgo I':
 
@@ -3448,7 +3727,7 @@ def primaneta(request,descuento):
 
 						aseguradora[i]['rimac']= 350
 
-				if nameriesgorimac =='Pick-UP' and monto <= 375:
+				if nameriesgorimac =='Pick-UP' and int(aseguradora[i]['rimac']) <= 375:
 
 					aseguradora[i]['rimac']= 375
 
@@ -3467,12 +3746,6 @@ def primaneta(request,descuento):
 				if AutoValor.objects.filter(id=id_auto_valor,excluidorimac='Si').count()>0:
 
 					aseguradora[i]['rimac'] = 'Modelo Restringido'
-
-
-
-			# 		print programarimac
-
-
 
 
 	data_dict = ValuesQuerySetToDict(aseguradora)
@@ -3562,6 +3835,8 @@ def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 	gpshdi = 'No'
 
 
+
+
 	auto =AutoValor.objects.get(id_modelo_id=modelo,id_marca_id=marca,id_tipo_id=tipo)
 
 	id_auto = auto.id
@@ -3599,8 +3874,6 @@ def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 
 	progmapfre = programa.split('z')[0]
 
-	print 'progmapfre',progmapfre
-
 	if int(progmapfre)==5 or int(progmapfre)==1 or int(progmapfre)==24:
 
 		if (str(id_auto in yaris) == 'True' and  int(difanio)<4) or (int(id_auto)==8376 and int(difanio)<4):
@@ -3615,7 +3888,7 @@ def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 
 			gpsmapfre = 'Si'
 
-		print 'id_auto',id_auto
+
 
 		ceratos=[1575,1573,1571,1569,1567,1565,1576,1574,1572,1570,6942,1568,1566,1564,6903,6918]
 
@@ -3680,6 +3953,16 @@ def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 		gpspacifico = 'Si'
 
 
+	if int(uso)== 20:
+
+		gpshdi='Si'
+		gpspositiva='Si'
+		gpsmapfre='Si'
+		gpspacifico='Si'
+		gpsrimac='Si'
+
+
+
 	data = {'gpshdi':gpshdi,'gpsmapfre':gpsmapfre,'gpsrimac':gpsrimac,'gpspacifico':gpspacifico,'gpspositiva':gpspositiva}
 
 	data = json.dumps(data)
@@ -3688,7 +3971,6 @@ def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 @csrf_exempt
 def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 
-	print 'modelo cob',modelo
 
 
 	tipo = AutoValor.objects.filter(id_modelo_id=modelo)
@@ -3702,6 +3984,11 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 	promapfre = pro[0]
 	propositiva = pro[2]
 	prorimac = pro[1]
+
+
+	if int(prorimac) == 25 or int(prorimac)== 26:
+
+		prorimac= 2
 
 	body = ''
 
@@ -3751,37 +4038,45 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 	for i in range(len(cobertura)):
 
-		cober.append(i)
+
 
 		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=3).count()==1:
 
-			lista.append(i)
 
-			cobertura[i]['hdi'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=3).value
+			if int(uso)!=20:
+
+				cobertura[i]['hdi'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=3).value
 			
-		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=1).count()==1:
+		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=1,programa_id=propositiva).count()==1:
 
-			lista.append(i)
 
-			cobertura[i]['positiva'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=1).value
+
+			cobertura[i]['positiva'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=1,programa_id=propositiva).value
 
 		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=2).count()==1:
 
-			lista.append(i)
+	
 
-			cobertura[i]['pacifico'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=2).value
+			if int(uso)!=20:
+
+				cobertura[i]['pacifico'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=2).value
 
 		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=4,programa_id=promapfre).count()==1:
 		
-			lista.append(i)
+
 
 			cobertura[i]['mapfre'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=4,programa_id=promapfre).value
 		
-		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=5,programa_id=prorimac).count()==1:
 
-			lista.append(i)
+		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=5,programa_id=prorimac).count()>0:
+
+			if int(tipo) !=3:
 			
-			cobertura[i]['rimac'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=5,programa_id=prorimac).value
+				cobertura[i]['rimac'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=5,programa_id=prorimac).value
+
+			else:
+
+				cobertura[i]['rimac'] =None
 
 
 	data_dict = ValuesQuerySetToDict(cobertura)
@@ -3794,12 +4089,19 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 @csrf_exempt
 def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
+	auto = AutoValor.objects.filter(id_modelo_id=modelo)
 
-	tipo = AutoValor.objects.get(id_modelo_id=modelo)
+	for t in auto:
 
-	id_auto_valor = AutoValor.objects.get(id_modelo_id=modelo).id
+		tipo = t.id_tipo.id_clase
 
-	riesgorimac = 3
+		id_auto_valor=t.id
+
+	riesgorimac = 6
+
+	riesgomapfre=3
+
+	riesgopositiva = 3
 
 	if RiesgAseg.objects.filter(aseguradora_id=1,id_model_id=id_auto_valor):
 
@@ -3817,17 +4119,15 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 		riesgorimac = RiesgAseg.objects.get(aseguradora_id=5,id_model_id=id_auto_valor).id_riesg.id_riesgo
 
-
-
-
-	tipo = tipo.id_tipo.id_clase
-
+	#tipo = tipo.id_tipo.id_clase
 	pro = programa.split('z')
-
-
 	promapfre = pro[0]
 	propositiva = pro[2]
 	prorimac = pro[1]
+
+	if int(prorimac) == 25 or int(prorimac)== 26:
+
+		prorimac= 2
 
 
 	
@@ -3835,12 +4135,13 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 	
 	anio = int(Anio.objects.get(id_anio=anio).anio_antig)
 
+	difanio =  int(datetime.datetime.now().year)-anio
+
 	lista = []
 
 	cober = []
 
 	for i in range(len(deducible)):
-
 
 		if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso,tipo__id_clase=tipo).count()>0:
 
@@ -3848,47 +4149,110 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 			#deducible[i]['hdi'] = DeducAsegur.objects.get(riesgo_id=riesgohdi,id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso,tipo__id_clase=tipo).value
 
-		# p= DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,id_uso=uso,modalidad_id=modalidad,programa_id=propositiva,tipo_id=tipo).values('id_deduc__deducible')
+		if  DeducAsegur.objects.filter(riesgo_id=riesgopositiva,id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).count()>0:
 
-		# if p.count()==1:
+			if int(tipo)==6 :
 
-		# 	deducible[i]['positiva'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,id_uso=uso,modalidad_id=modalidad,programa_id=propositiva,tipo_id=tipo).value
+				tipo=3
+
+			deducible[i]['positiva'] = DeducAsegur.objects.get(riesgo_id=riesgopositiva,id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva,tipo__id_clase=tipo).value
+
+		if int(propositiva) == 29:
+
+			if  DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).count()>0:
+
+				deducible[i]['positiva'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).value
+
+		if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).count()==1:
+
+			if int(uso)!=20:
+
+				deducible[i]['pacifico'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).value
 
 
-		# if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).count()==1:
-
-		# 	deducible[i]['pacifico'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).value
 
 
-		# p = DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre,id_uso_id=uso,riesgo_id=riesgomapfre,tipo_id=tipo).values('id_deduc__deducible')
-
-		
 		## Mapfre
 
 		if int(promapfre) == 1:
 
-			if DeducAsegur.objects.filter(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
+
+			if DeducAsegur.objects.filter(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],tipo__id_clase=tipo,id_aseg_id=4,programa_id=promapfre).count()==1:
 
 			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],tipo__id_clase=tipo,id_aseg_id=4,programa_id=promapfre).value
 			
+		if int(promapfre) == 21:
 
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
+
+			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
+
+		if int(promapfre) == 22:
+
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
+
+			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
+			
+			 	if (int(difanio)==5 or int(difanio)==4) and int(deducible[i]['id_deduc'])== 3294:
+
+			 		 deducible[i]['mapfre'] = '30% del monto indemnizable'
+
+		if int(promapfre) == 5:
+
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
+
+			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
+	
+
+		if int(promapfre) == 24:
+
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
+
+			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
+	
 		## Deducible rimac
 
 		if int(prorimac) == 2:
 
-			if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()>0:
-			
+			# if int(riesgorimac)==3:
+
+			# 	deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
+
+			if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()>0:		
+
 				deducible[i]['rimac'] = DeducAsegur.objects.get(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
-			
+							
 			if int(tipo)==6:
 
-				if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()==1:
+				if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()==1:
 				
 					deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
+	
+		if int(prorimac) == 6:
+
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,id_uso_id=uso,programa_id=prorimac).count()>0:
+			
+				deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,id_uso_id=uso,programa_id=prorimac).value
+
+		if int(prorimac) == 10:
+
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,id_uso_id=uso,programa_id=prorimac,tipo__id_clase=tipo).count()==1:
+			
+				deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,id_uso_id=uso,programa_id=prorimac,tipo__id_clase=tipo).value
+
+		if int(prorimac) == 11:
+
+
+			if int(tipo) !=3:
+
+				if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).count()>0:
 				
+					deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).value
 
+			else:
 
-
+				deducible[i]['rimac'] =None
+	
 	data_dict = ValuesQuerySetToDict(deducible)
 
 	data = json.dumps(data_dict)
@@ -3897,54 +4261,52 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 
 @csrf_exempt
-def servic(request):
+def servic(request,uso,programa):
 
-	
+
+	prorimac = str(programa).split('z')[1]
+
+	promapfre = str(programa).split('z')[0]
+
+	propositiva = str(programa).split('z')[2]
 
 	servicio = Servicios.objects.all().values('id_serv','services').order_by('id_serv')
 
 
-	lista = []
-
-	cober = []
 
 	for i in range(len(servicio)):
 
-		cober.append(i)
+
 
 		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=3).count()==1:
 
-			lista.append(i)
+			if int(uso)!=20:
 
-			servicio[i]['hdi'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=3).valor
-
-
-		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=1).count()==1:
-
-			lista.append(i)
-
-			servicio[i]['positiva'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=1).valor
+				servicio[i]['hdi'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=3).valor
 
 
-		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=2).count()==1:
-
-			lista.append(i)
-
-			servicio[i]['pacifico'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=2).valor
+		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=1,id_program_id=propositiva).count()==1:
 
 
-		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=5).count()==1:
-
-			lista.append(i)
-
-			servicio[i]['rimac'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=5).valor
+			servicio[i]['positiva'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=1,id_program_id=propositiva).valor
 
 
-		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=4).count()==1:
+		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=2).count()>0:
 
-			lista.append(i)
+			if int(uso)!=20:
 
-			servicio[i]['mapfre'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=4).valor
+				servicio[i]['pacifico'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=2).valor
+
+		if int(ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=5,id_program_id=prorimac,id_uso_id=uso).count())>0:
+
+
+				servicio[i]['rimac'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=5,id_program_id=prorimac,id_uso_id=uso).valor
+
+
+
+		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=4,id_program_id=promapfre).count()>0:
+
+			servicio[i]['mapfre'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=4,id_program_id=promapfre).valor
 
 	data_dict = ValuesQuerySetToDict(servicio)
 
@@ -4569,7 +4931,7 @@ def man_autos(request):
 @csrf_exempt
 def man_cob(request):
 
-	coberturas = CobertAsegur.objects.all().values('id','tipo__clase','antigued','id_cob','programa','programa__program','id_aseg','modalidad','id_cob__descripcion','id_aseg__name_asegurad','id_uso','id_uso__uso','modalidad__name_modalidad','value').order_by('-id')
+	coberturas = CobertAsegur.objects.all().values('id','tipo__clase','antigued','id_cob','programa','programa__program','id_aseg','modalidad','id_cob__descripcion','id_aseg__name_asegurad','id_uso','id_uso__uso','modalidad__name_modalidad','value').order_by('-id')[:50]
 
 	data_dict = ValuesQuerySetToDict(coberturas)	
 
@@ -4614,7 +4976,7 @@ def man_finan(request):
 @csrf_exempt
 def deduc_cob(request):
 
-	deducib = DeducAsegur.objects.all().values('riesgo__tipo_riesgo','id_aseg','id_uso','tipo','modalidad','id','programa','id_deduc','programa__program','id','id_deduc__deducible','id_aseg__name_asegurad','id_uso__uso','tipo__clase','value','modalidad__name_modalidad','value').order_by('-id')
+	deducib = DeducAsegur.objects.all().values('riesgo__tipo_riesgo','id_aseg','id_uso','tipo','modalidad','id','programa','id_deduc','programa__program','id','id_deduc__deducible','id_aseg__name_asegurad','id_uso__uso','tipo__clase','value','modalidad__name_modalidad','value').order_by('-id')[:50]
 
 	data_dict = ValuesQuerySetToDict(deducib)
 

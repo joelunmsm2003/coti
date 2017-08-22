@@ -91,6 +91,19 @@ class AuthUserUserPermissions(models.Model):
         db_table = 'auth_user_user_permissions'
         unique_together = (('user', 'permission'),)
 
+class Modelo(models.Model):
+    id_model = models.AutoField(primary_key=True)
+    name_model = models.CharField(max_length=50)
+
+    class Meta:
+        managed = False
+        db_table = 'modelo'
+        verbose_name = 'Modelo'
+
+    def __unicode__(self):
+        return self.name_model
+
+
 
 class AutoValor(models.Model):
     id_marca = models.ForeignKey('Marca', models.DO_NOTHING, db_column='id_marca')
@@ -101,18 +114,18 @@ class AutoValor(models.Model):
     excluidohdi = models.CharField(max_length=100)
     categoriahdi = models.CharField(max_length=100)
     excluidorimac = models.CharField(max_length=100)
+    mapfretaxialto = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'auto_valor'
+        verbose_name = 'Marca / Modelo'
 
-    def display_genre(self):
-        """
-        Creates a string for the Genre. This is required to display genre in Admin.
-        """
-        return ', '.join([ genre.name for genre in self.genre.all()[:3] ])
-    
-    display_genre.short_description = 'Genre'
+    def __unicode__(self,obj):
+        return obj.id_modelo.name_model
+
+
+
 
 
 class Categorias(models.Model):
@@ -132,6 +145,9 @@ class Clase(models.Model):
         managed = False
         db_table = 'clase'
 
+    def __unicode__(self):
+        return self.clase
+
 
 class Riesgo(models.Model):
     id_riesgo = models.AutoField(primary_key=True)
@@ -140,6 +156,9 @@ class Riesgo(models.Model):
     class Meta:
         managed = False
         db_table = 'riesgo'
+
+    def __unicode__(self):
+        return self.tipo_riesgo
 
 
 class Clientes(models.Model):
@@ -164,22 +183,6 @@ class Clientes(models.Model):
         db_table = 'clientes'
 
 
-class CobertAsegur(models.Model):
-    id_cob = models.ForeignKey('Cobertura', models.DO_NOTHING, db_column='id_cob')
-    id_aseg = models.ForeignKey('Aseguradora', models.DO_NOTHING, db_column='id_aseg')
-    id_uso = models.ForeignKey('Uso', models.DO_NOTHING, db_column='id_uso')
-    value = models.CharField(db_column='Value', max_length=15000)  # Field name made lowercase.
-    antigued = models.IntegerField(blank=True, null=True)
-    modalidad = models.ForeignKey('Modalidad', models.DO_NOTHING, db_column='modalidad')
-    riesg_auto = models.ForeignKey('Riesgo', models.DO_NOTHING, db_column='riesg_auto')
-    programa = models.ForeignKey('Programa', models.DO_NOTHING, db_column='programa')
-    tipo = models.ForeignKey(Clase, models.DO_NOTHING, db_column='tipo')
-
-    class Meta:
-        managed = False
-        db_table = 'cobert_asegur'
-
-
 class Cobertura(models.Model):
     id_cobert = models.AutoField(primary_key=True)
     descripcion = models.CharField(max_length=500)
@@ -187,6 +190,31 @@ class Cobertura(models.Model):
     class Meta:
         managed = False
         db_table = 'cobertura'
+
+    def __unicode__(self):
+        return self.descripcion
+
+
+class CobertAsegur(models.Model):
+    id_cob = models.ForeignKey('Cobertura', models.DO_NOTHING, db_column='id_cob')
+    id_aseg = models.ForeignKey('Aseguradora', models.DO_NOTHING, db_column='id_aseg')
+    id_uso = models.ForeignKey('Uso', models.DO_NOTHING, db_column='id_uso')
+    value = models.CharField(db_column='Value', max_length=15000)  # Field name made lowercase.
+    antigued = models.IntegerField(blank=True, null=True)
+    #modalidad = models.ForeignKey('Modalidad', models.DO_NOTHING, db_column='modalidad')
+    riesg_auto = models.ForeignKey('Riesgo', models.DO_NOTHING, db_column='riesg_auto',null=True)
+    programa = models.ForeignKey('Programa', models.DO_NOTHING, db_column='programa')
+    tipo = models.ForeignKey(Clase, models.DO_NOTHING, db_column='tipo')
+
+    class Meta:
+        managed = False
+        db_table = 'cobert_asegur'
+        verbose_name = 'Cobertura / Aseguradora'
+
+
+    def __unicode__(self):
+        return self.id_cob.descripcion
+
 
 
 class Deducibles(models.Model):
@@ -197,13 +225,16 @@ class Deducibles(models.Model):
         managed = False
         db_table = 'deducibles'
 
+    def __unicode__(self):
+        return self.deducible
+
         
 class DeducAsegur(models.Model):
     id_deduc = models.ForeignKey('Deducibles', models.DO_NOTHING, db_column='id_deduc')
     id_aseg = models.ForeignKey('Aseguradora', models.DO_NOTHING, db_column='id_aseg')
     id_uso = models.ForeignKey('Uso', models.DO_NOTHING, db_column='id_uso')
     tipo = models.ForeignKey(Clase, models.DO_NOTHING, db_column='tipo')
-    modalidad = models.ForeignKey('Modalidad', models.DO_NOTHING, db_column='modalidad')
+    #modalidad = models.ForeignKey('Modalidad', models.DO_NOTHING, db_column='modalidad')
     programa = models.ForeignKey('Programa', models.DO_NOTHING, db_column='programa')
     riesgo = models.ForeignKey('Riesgo', models.DO_NOTHING, db_column='riesgo')
     value = models.CharField(max_length=800)
@@ -211,6 +242,7 @@ class DeducAsegur(models.Model):
     class Meta:
         managed = False
         db_table = 'deduc_asegur'
+        verbose_name = 'Deducible / Aseguradora'
 
 
 
@@ -315,6 +347,9 @@ class Marca(models.Model):
         managed = False
         db_table = 'marca'
 
+    def __unicode__(self):
+        return self.name_marca
+
 
 
 
@@ -328,13 +363,7 @@ class Modalidad(models.Model):
         db_table = 'modalidad'
 
 
-class Modelo(models.Model):
-    id_model = models.AutoField(primary_key=True)
-    name_model = models.CharField(max_length=50)
 
-    class Meta:
-        managed = False
-        db_table = 'modelo'
 
 
 class Parametros(models.Model):
@@ -367,6 +396,7 @@ class ProgAseg(models.Model):
     class Meta:
         managed = False
         db_table = 'prog_aseg'
+        verbose_name = 'Programa / Aseguradora'
 
 
 class Programa(models.Model):
@@ -376,6 +406,7 @@ class Programa(models.Model):
     class Meta:
         managed = False
         db_table = 'programa'
+        verbose_name = 'Programa'
 
     def __unicode__(self):
         return self.program
@@ -393,8 +424,19 @@ class RiesgAseg(models.Model):
     class Meta:
         managed = False
         db_table = 'riesg_aseg'
+        verbose_name = 'Riesgo / Aseguradora'
 
 
+class Servicios(models.Model):
+    id_serv = models.AutoField(primary_key=True)
+    services = models.CharField(max_length=10000)
+
+    class Meta:
+        managed = False
+        db_table = 'servicios'
+
+    def __unicode__(self):
+        return self.services
 
 
 class ServicAsegur(models.Model):
@@ -408,15 +450,10 @@ class ServicAsegur(models.Model):
     class Meta:
         managed = False
         db_table = 'servic_asegur'
+        verbose_name = 'Servicio / Aseguradora'
 
 
-class Servicios(models.Model):
-    id_serv = models.AutoField(primary_key=True)
-    services = models.CharField(max_length=10000)
 
-    class Meta:
-        managed = False
-        db_table = 'servicios'
 
 
 class TasaAsegur(models.Model):
@@ -438,6 +475,7 @@ class TasaAsegur(models.Model):
     class Meta:
         managed = False
         db_table = 'tasa_asegur'
+        verbose_name = 'Tasas / Aseguradora'
 
 
 class Timon(models.Model):
@@ -448,6 +486,9 @@ class Timon(models.Model):
         managed = False
         db_table = 'timon'
 
+    def __unicode__(self):
+        return self.name_tipo
+
 
 class Uso(models.Model):
     id_uso = models.AutoField(primary_key=True)
@@ -456,6 +497,13 @@ class Uso(models.Model):
     class Meta:
         managed = False
         db_table = 'uso'
+
+    def __unicode__(self):
+        return self.uso
+
+
+
+
         
 class Lote(models.Model):
     file =models.FileField(upload_to='static')

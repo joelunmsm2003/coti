@@ -278,7 +278,7 @@ $scope.marcacheck = function(data){
 
   $http.get(host+"/aseguradoras/").success(function(response) {$scope.aseguradoras = response;
 
-    $scope.model.aseguradora = $scope.aseguradoras[1]
+    $scope.model.aseguradora = $scope.aseguradoras[3]
     $scope.datamodel.aseguradora = $scope.aseguradoras[1]
 
 
@@ -301,7 +301,7 @@ $scope.marcacheck = function(data){
 
   $http.get(host+"/programas/").success(function(response) {$scope.programas = response;
 
-    $scope.model.programa = $scope.programas[16]
+    $scope.model.programa = $scope.programas[18]
 
     });
 
