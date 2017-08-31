@@ -43,7 +43,7 @@ import requests
 import os
 import pdfkit
 import datetime
-import pdfcrowd
+
 
 from django.shortcuts import render
 from django.views.generic import View
@@ -68,9 +68,13 @@ from reportlab.lib.pagesizes import letter
 from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Image
 from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
-
-
 from django.http import HttpResponse
+from django.core.mail import EmailMultiAlternatives
+
+def ValuesQuerySetToDict(vqs):
+	return [item for item in vqs]
+
+
 
 
 def tipousosubir(request):
@@ -169,7 +173,7 @@ def excluidospositiva(request):
 				
 					if str(sh.row(rx)[col]).split("'")[1] == 'No permitido':
 
-						a.permitido = 'No Permitido'
+						a.permitidopositiva = 'No Permitido'
 						a.save()
 
 
@@ -179,8 +183,6 @@ def excluidoshdi(request):
 
 	xls_name = '/home/excluidoshdi.xls'
 
-
-
 	book = xlrd.open_workbook(xls_name)
 
 	sh = book.sheet_by_index(0)
@@ -188,7 +190,6 @@ def excluidoshdi(request):
 	for rx in range(sh.nrows):
 
 		for col in range(sh.ncols):
-
 
 			if rx>0:
 
@@ -198,17 +199,13 @@ def excluidoshdi(request):
 
 					a = AutoValor.objects.get(id=id)
 
-
 				if col==5:
-
-
-
 
 					if str(sh.row(rx)[col]).split("'")[1] == 'x':
 
 						a.excluidohdi = 'Si'
-						a.save()
 
+						a.save()
 
 	return HttpResponse('nologeado', content_type="application/json")
 
@@ -264,16 +261,12 @@ def gpsrimacsubir(request):
 
 						Gps(id_auto_id=a.id,value='Si',id_aseg_id=2).save()
 
-
-
 	return HttpResponse('nologeado', content_type="application/json")
 
 
 def excluidosrimac(request):
 
 	xls_name = '/home/excluidorimac.xls'
-
-
 
 	book = xlrd.open_workbook(xls_name)
 
@@ -283,7 +276,6 @@ def excluidosrimac(request):
 
 		for col in range(sh.ncols):
 
-			print rx,col
 
 			if rx>0:
 
@@ -293,10 +285,7 @@ def excluidosrimac(request):
 
 					a = AutoValor.objects.get(id=id)
 
-
 				if col==5:
-
-
 
 					if str(sh.row(rx)[col]).split("'")[1] == 'x':
 
@@ -312,8 +301,6 @@ def riesgohdi(request,aseguradora):
 
 	xls_name = '/home/riesgosubirhdi.xls'
 
-
-
 	book = xlrd.open_workbook(xls_name)
 
 	sh = book.sheet_by_index(0)
@@ -324,7 +311,7 @@ def riesgohdi(request,aseguradora):
 
 		for col in range(sh.ncols):
 
-			print rx,col
+
 
 			if rx>0:
 
@@ -376,7 +363,6 @@ def riesgosubir(request,aseguradora):
 
 	xls_name = '/home/riesgosubir.xls'
 
-	print xls_name
 
 	book = xlrd.open_workbook(xls_name)
 
@@ -388,7 +374,7 @@ def riesgosubir(request,aseguradora):
 
 		for col in range(sh.ncols):
 
-			print rx,col
+
 
 			if rx>0:
 
@@ -1046,8 +1032,11 @@ def uploadfile(request):
 
 
 		TasaAsegur.objects.filter(id_aseg_id=1).delete()
+
+
 		
-		print 'Positiva'
+		
+
 
 		sh = book.sheet_by_index(3)
 
@@ -1063,11 +1052,13 @@ def uploadfile(request):
 
 					if col > 0:
 
-						print rx,col,str(sh.row(rx)[col])
+
 
 						if str(sh.row(rx)[col])!="text:u'No aplica'":
 
 							valor= str(sh.row(rx)[col]).split('number:')[1]
+
+							print valor,ant
 
 
 							if col==1:
@@ -1168,62 +1159,67 @@ def uploadfile(request):
 
 								TasaAsegur(id_aseg_id=1,value=valor,id_uso_id=17,tipo_id=19,programa_id=32,anio=ant).save()
 
+							#Uso Transporte
+
+							if col==21:
+
+								print 'tasass ingresando...'
+
+								TasaAsegur(id_aseg_id=1,value=valor,id_uso_id=21,tipo_id=13,programa_id=39,anio=ant).save()
 
 
 
+		# TasaAsegur.objects.filter(id_aseg_id=2).delete()
 
-		TasaAsegur.objects.filter(id_aseg_id=2).delete()
+		# ### Pacifico
 
-		### Pacifico
+		# sh = book.sheet_by_index(4)
 
-		sh = book.sheet_by_index(4)
+		# for rx in range(sh.nrows):
 
-		for rx in range(sh.nrows):
-
-			for col in range(sh.ncols):
+		# 	for col in range(sh.ncols):
 
 				
 
-				if rx>3:
+		# 		if rx>3:
 
-					if int(col)==0:
+		# 			if int(col)==0:
 
-						ant= str(sh.row(rx)[col]).split(':')[1].split('.')[0]
+		# 				ant= str(sh.row(rx)[col]).split(':')[1].split('.')[0]
 
-					if int(col) > 0:
+		# 			if int(col) > 0:
 
 						
 
-						if str(sh.row(rx)[col])!="text:u'No aplica'":
+		# 				if str(sh.row(rx)[col])!="text:u'No aplica'":
 
-							valor= str(sh.row(rx)[col]).split('number:')[1]
-
-							print rx,col
+		# 					valor= str(sh.row(rx)[col]).split('number:')[1]
 
 
-							if col==1:
 
-								TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=6,anio=ant,programa_id=4).save()
+		# 					if col==1:
 
-							if col==2:
+		# 						TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=6,anio=ant,programa_id=4).save()
 
-								TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=7,anio=ant,programa_id=4).save()
+		# 					if col==2:
 
-							if col==3:
+		# 						TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=7,anio=ant,programa_id=4).save()
 
-								TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=2,anio=ant,programa_id=4).save()
+		# 					if col==3:
 
-							if col==4:
+		# 						TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=2,anio=ant,programa_id=4).save()
 
-								TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=1,anio=ant,programa_id=4).save()
+		# 					if col==4:
 
-							if col==5:
+		# 						TasaAsegur(id_aseg_id=2,value=valor,riesgo_id=1,anio=ant,programa_id=4).save()
 
-								TasaAsegur(id_aseg_id=2,value=valor,origen='Chino',anio=ant,programa_id=4).save()
+		# 					if col==5:
 
-							if col==6:
+		# 						TasaAsegur(id_aseg_id=2,value=valor,origen='Chino',anio=ant,programa_id=4).save()
 
-								TasaAsegur(id_aseg_id=2,value=valor,tipo_id=6,anio=ant,programa_id=4).save()
+		# 					if col==6:
+
+		# 						TasaAsegur(id_aseg_id=2,value=valor,tipo_id=6,anio=ant,programa_id=4).save()
 
 
 
@@ -1246,323 +1242,14 @@ class Perfil(JSONWebTokenAuthMixin, View):
 
 		id =request.user.id
 
-		print 'ID',id
+
 
 		return HttpResponse(id, content_type="application/json")
 
 
-def hello(c):
-	from reportlab.lib.units import inch
 
-	#First Example
 
-	c.setFont("Helvetica", 6) #choose your font type and font size
-  
-def pdfout(request):
- 
-	response = HttpResponse(content_type='application/pdf')
-	response['Content-Disposition'] = 'attachment; filename="somefilename.pdf"'
 
-	p = canvas.Canvas(response)
-
-	p.setFillColorRGB(0,0,0)
-
-
-	logo = "/var/www/cotizacion/frontend/img/logo-hermes.png"
-
-	p.drawImage(logo, 20, 800,width=80,height=22,mask='auto');
-
-	hello(p)
-	j=50
-
-	r = requests.get('http://cotizador.hermes.pe:800/html/cotiza.json')
-	c = requests.get('http://cotizador.hermes.pe:800/html/coberturas.json')
-	d = requests.get('http://cotizador.hermes.pe:800/html/deducibles.json')
-	s = requests.get('http://cotizador.hermes.pe:800/html/servicios.json')
-	g = requests.get('http://cotizador.hermes.pe:800/html/gps.json')
-	cl = requests.get('http://cotizador.hermes.pe:800/html/cliente.json')
-	f = requests.get('http://cotizador.hermes.pe:800/html/financiamiento.json')
-
-	a = json.loads(r.text)
-	c= json.loads(c.text)
-	d= json.loads(d.text)
-	s= json.loads(s.text)
-	g= json.loads(g.text)
-	cl= json.loads(cl.text)
-	cl= cl[0]
-	fi= json.loads(f.text)
-
-
-	#'id_cliente','fullname','email','celular','chose_marca__name_marca','chose_modelo__name_model','chose_tipo__clase','chose_timon__name_tipo','chose_modalid__name_modalidad','chose_uso__uso','chose_anio__anio_antig','chose_ubicl','chose_ubicp','chose_informat','value');
-	
-
-	# Draw things on the PDc. Here's where the PDF generation happens.
-	# See the ReportLab documentation for the full list of functionality.
-
-	columna = 780
-	es=0
-
-	p.drawString(20, columna, "Datos Cliente")
-	p.drawString(70+j, columna,str(cl['id_cliente'] ))
-	p.drawString(120+j*2, columna,'Nombre: '+str(cl['fullname'] ))
-	p.drawString(170+j*3, columna,'Email: '+str(cl['email'] ))
-
-
-	et=2
-	p.setFillColorRGB(0,0,0)
-	p.rect(20,columna-13*et,7.5*inch,.15*inch, fill=1)
-	p.setFillColorRGB(13,10,101)
-	p.drawString(22, columna-13*et+3,'Marca: ' )
-	p.drawString(70+j, columna-13*et+3,'Modelo: ')
-	p.drawString(120+j*2, columna-13*et+3,'Clase: ')
-	p.drawString(170+j*3, columna-13*et+3,'Anio: ')
-	p.drawString(220+j*4, columna-13*et+3,'Precio: ')
-
-
-	et=3
-	p.setFillColorRGB(0,0,0)
-
-	p.drawString(20, columna-12*et,str(cl['chose_marca__name_marca']))
-	p.drawString(70+j, columna-12*et,str(cl['chose_modelo__name_model'] ))
-	p.drawString(120+j*2, columna-12*et,str(cl['chose_tipo__clase'] ))
-	p.drawString(170+j*3, columna-12*et,str(cl['chose_anio__anio_antig'] ))
-	p.drawString(220+j*4, columna-12*et,str(cl['value'] ))
-
-	
-
-	#et=4
-	
-	#p.drawString(70+j, columna-13*et+3,'MAPFRE ')
-	#p.drawString(120+j*2, columna-13*et+3,'LA POSITIVA ')
-	#p.drawString(170+j*3, columna-13*et+3,'RIMAC: ')
-	#p.drawString(220+j*4, columna-13*et+3,'PACIFICO: ')
-	#p.drawString(250+j*5, columna-13*et+3,'Marca: ' )
-
-	et = 4
-	#p.drawString(20, columna-15*et, "GPS")
-
-	p.drawString(70+j, columna-13*et,'GPS: '+g['gpsmapfre'] )
-	p.drawString(120+j*2, columna-13*et,'GPS: '+g['gpspositiva'] )
-	p.drawString(170+j*3, columna-13*et,'GPS: '+g['gpsrimac'] )
-	p.drawString(220+j*4, columna-13*et,'GPS: '+g['gpspacifico'])
-	p.drawString(250+j*5, columna-13*et,'GPS: '+g['gpshdi'] )
-
-
-	et=5
-	p.setFillColorRGB(0,0,0)
-	p.rect(20,columna-15*et,7.5*inch,.15*inch, fill=1)
-	p.setFillColorRGB(13,10,101)
-	p.drawString(250, columna-15*et+3, "Financiamiento")
-
-	fi[0]['financiamiento'] = fi[0]['financiamiento'].encode('ascii','ignore').encode('ascii','replace')
-	fi[0]['mapfre'] = fi[0]['mapfre'].encode('ascii','ignore').encode('ascii','replace')
-	fi[0]['positiva']= fi[0]['positiva'].encode('ascii','ignore').encode('ascii','replace')
-	fi[0]['rimac']= fi[0]['rimac'].encode('ascii','ignore').encode('ascii','replace')
-	fi[0]['hdi']= fi[0]['hdi'].encode('ascii','ignore').encode('ascii','replace')
-
-	fi[1]['financiamiento'] = fi[1]['financiamiento'].encode('ascii','ignore').encode('ascii','replace')
-	fi[1]['mapfre'] = fi[1]['mapfre'].encode('ascii','ignore').encode('ascii','replace')
-	fi[1]['positiva']= fi[1]['positiva'].encode('ascii','ignore').encode('ascii','replace')
-	fi[1]['rimac']= fi[1]['rimac'].encode('ascii','ignore').encode('ascii','replace')
-	fi[1]['hdi']= fi[1]['hdi'].encode('ascii','ignore').encode('ascii','replace')
-
-	fi[2]['financiamiento'] = fi[2]['financiamiento'].encode('ascii','ignore').encode('ascii','replace')
-	fi[2]['mapfre'] = fi[2]['mapfre'].encode('ascii','ignore').encode('ascii','replace')
-	fi[2]['positiva']= fi[2]['positiva'].encode('ascii','ignore').encode('ascii','replace')
-	fi[2]['rimac']= fi[2]['rimac'].encode('ascii','ignore').encode('ascii','replace')
-	fi[2]['hdi']= fi[2]['hdi'].encode('ascii','ignore').encode('ascii','replace')
-
-
-	et =6
-	p.drawString(20, columna-15*et, str(fi[0]['financiamiento']))
-	p.drawString(70+j, columna-15*et, str(fi[0]['mapfre']))
-	p.drawString(120+j*2, columna-15*et, str(fi[0]['positiva']))
-	p.drawString(170+j*3, columna-15*et, str(fi[0]['rimac']))
-	p.drawString(220+j*4, columna-15*et, str(fi[0]['pacifico']))
-	p.drawString(250+j*5, columna-15*et, str(fi[0]['hdi']))
-
-	et=7
-	p.drawString(20, columna-15*et, str(fi[1]['financiamiento']))
-	p.drawString(70+j, columna-15*et, str(fi[1]['mapfre']))
-	p.drawString(120+j*2, columna-15*et, str(fi[1]['positiva']))
-	p.drawString(170+j*3, columna-15*et, str(fi[1]['rimac']))
-	p.drawString(220+j*4, columna-15*et, str(fi[1]['pacifico']))
-	p.drawString(250+j*5, columna-15*et, str(fi[1]['hdi']))
-
-	et=8
-	p.drawString(20, columna-15*et, str(fi[2]['financiamiento'])[0:30])
-	p.drawString(70+j, columna-15*et, str(fi[2]['mapfre']))
-	p.drawString(120+j*2, columna-15*et, str(fi[2]['positiva']))
-	p.drawString(170+j*3, columna-15*et, str(fi[2]['rimac']))
-	p.drawString(220+j*4, columna-15*et, str(fi[2]['pacifico']))
-	p.drawString(250+j*5, columna-15*et, str(fi[2]['hdi']))
-	
-
-	et=9
-
-	p.drawString(20, columna-15*et, "Aseguradoras")
-	p.drawString(70+j, columna-15*et, "Mapfre")
-	p.drawString(120+j*2, columna-15*et, "La Positiva")
-	p.drawString(170+j*3, columna-15*et, "Rimac")
-	p.drawString(220+j*4, columna-15*et, "Pacifico")
-	p.drawString(250+j*5, columna-15*et, "HDI")
-
-	et =10
-	p.drawString(20, columna-15*et, "Tasa")
-	p.drawString(70+j, columna-15*et, str(a['tasamapfre']))
-	p.drawString(120+j*2, columna-15*et, str(a['tasapositiva']))
-	p.drawString(170+j*3, columna-15*et, str(a['tasarimac']))
-	p.drawString(220+j*4, columna-15*et, str(a['tasapacifico']))
-	p.drawString(250+j*5, columna-15*et, str(a['tasahdi']))
-
-	et=11
-	p.drawString(20, columna-15*et, "Prima Neta")
-	p.drawString(70+j, columna-15*et, str(a['mapfre']))
-	p.drawString(120+j*2, columna-15*et, str(a['positiva']))
-	p.drawString(170+j*3, columna-15*et, str(a['rimac']))
-	p.drawString(220+j*4, columna-15*et, str(a['pacifico']))
-	p.drawString(250+j*5, columna-15*et, str(a['hdi']))
-
-	et=12
-	p.drawString(20, columna-15*et, "Prima Comercial")
-	p.drawString(70+j, columna-15*et, str(a['mapfresubtotal']))
-	p.drawString(120+j*2, columna-15*et, str(a['positivasubtotal']))
-	p.drawString(170+j*3, columna-15*et, str(a['rimacsubtotal']))
-	p.drawString(220+j*4, columna-15*et, str(a['pacificosubtotal']))
-	p.drawString(250+j*5, columna-15*et, str(a['phdisubtotal']))
-	
-	et=13
-
-	p.drawString(20, columna-15*et, "Total")
-	p.drawString(70+j, columna-15*et, str(a['mapfresubtotal']))
-	p.drawString(120+j*2, columna-15*et, str(a['positivatotal']))
-	p.drawString(170+j*3, columna-15*et, str(a['rimactotal']))
-	p.drawString(220+j*4, columna-15*et, str(a['pacificototal']))
-	p.drawString(250+j*5, columna-15*et, str(a['phditotal']))
-
-	columna = columna -40
-
-
-
-	p.setFillColorRGB(1,0.54902,0)
-	p.rect(20,columna-140,7.5*inch,.15*inch, fill=1)
-	p.setFillColorRGB(0,0,0)
-	p.drawString(122, columna-140+3, "Coberturas")
-
-	for i in range(0,18):
-
-		c[i]['descripcion'] = c[i]['descripcion'].encode('ascii','ignore').encode('ascii','replace')
-		c[i]['mapfre'] = c[i]['mapfre'].encode('ascii','ignore').encode('ascii','replace')
-		c[i]['positiva']= c[i]['positiva'].encode('ascii','ignore').encode('ascii','replace')
-		c[i]['rimac']= c[i]['rimac'].encode('ascii','ignore').encode('ascii','replace')
-
-		#c[i]['pacifico']= c[i]['pacifico'].encode('ascii','ignore').encode('ascii','replace')
-		c[i]['hdi']= c[i]['hdi'].encode('ascii','ignore').encode('ascii','replace')
-		
-		p.drawString(20, columna-160-15*i, str(c[i]['descripcion'])[0:30])
-		p.drawString(70+50, columna-160-15*i, str(c[i]['mapfre'])[0:30])
-		p.drawString(120+50*2, columna-160-15*i, str(c[i]['positiva'])[0:30])
-		p.drawString(170+50*3, columna-160-15*i, str(c[i]['rimac'])[0:30])
-		#p.drawString(250+50*4, 700-15*i, str(c[i]['pacifico']))
-		p.drawString(250+50*5, columna-160-15*i, str(c[i]['hdi'])[0:30])
-
-	columna =columna-15*i
-
-
-	p.setFillColorRGB(1,0.54902,0)
-	p.rect(20,columna-180,7.5*inch,.15*inch, fill=1)
-	p.setFillColorRGB(0,0,0)
-	p.drawString(22, columna-180+3, "Deducibles")
-	
-	for k in range(0,14):
-
-
-		d[k]['deducible'] = d[k]['deducible'].encode('ascii','ignore').encode('ascii','replace')
-		d[k]['mapfre'] = d[k]['mapfre'].encode('ascii','ignore').encode('ascii','replace')
-		d[k]['positiva']= d[k]['positiva'].encode('ascii','ignore').encode('ascii','replace')
-		d[k]['rimac']= d[k]['rimac'].encode('ascii','ignore').encode('ascii','replace')
-		#d[i]['pacifico']= d[i]['pacifico'].encode('ascii','ignore').encode('ascii','replace')
-		d[k]['hdi']= d[k]['hdi'].encode('ascii','ignore').encode('ascii','replace')
-
-		p.drawString(20, columna-200-15*k, str(d[k]['deducible'])[0:30])
-		p.drawString(70+50, columna-200-15*k, str(d[k]['mapfre'])[0:30])
-		p.drawString(120+50*2, columna-200-15*k, str(d[k]['positiva'])[0:30])
-		p.drawString(170+50*3, columna-200-15*k, str(d[k]['rimac'])[0:30])
-		#p.drawString(250+50*4, 320-15*i, str(d[i]['pacifico']))
-		p.drawString(250+50*5, columna-200-15*k, str(d[k]['hdi'])[0:30])
-
-	columna = columna-15*k
-
-
-	p.setFillColorRGB(1,0.54902,0)
-	p.rect(20,columna-220,7.5*inch,.15*inch, fill=1)
-	p.setFillColorRGB(0,0,0)
-	p.drawString(22, columna-220+3, "Servicios")
-	
-
-	for sk in range(0,5):
-
-
-		s[sk]['services'] = s[sk]['services'].encode('ascii','ignore').encode('ascii','replace')
-		s[sk]['mapfre'] = s[sk]['mapfre'].encode('ascii','ignore').encode('ascii','replace')
-		s[sk]['positiva']= s[sk]['positiva'].encode('ascii','ignore').encode('ascii','replace')
-		s[sk]['rimac']= s[sk]['rimac'].encode('ascii','ignore').encode('ascii','replace')
-		s[sk]['pacifico']= s[sk]['pacifico'].encode('ascii','ignore').encode('ascii','replace')
-		s[sk]['hdi']= s[sk]['hdi'].encode('ascii','ignore').encode('ascii','replace')
-
-		p.drawString(20, columna-240-15*sk, str(s[sk]['services'])[0:30])
-		p.drawString(70+50, columna-240-15*sk, str(s[sk]['mapfre'])[0:30])
-		p.drawString(120+50*2, columna-240-15*sk, str(s[sk]['positiva'])[0:30])
-		p.drawString(170+50*3, columna-240-15*sk, str(s[sk]['rimac'])[0:30])
-		p.drawString(220+50*4, columna-240-15*sk, str(s[sk]['pacifico'])[0:25])
-		p.drawString(250+50*5, columna-240-15*sk, str(s[sk]['hdi'])[0:30])
-
-
-	
-
-	# Close the PDF object cleanly, and we're done.
-	p.showPage()
-	p.save()
-	return response
-
-@csrf_exempt
-def recibetasas(request):
-
-	data = json.loads(request.body)
-
-	data = json.dumps(data)
-
-	f = open('/var/www/html/cotiza.json', 'w')
-	f.write(data)
-	f.close()
-
-	return HttpResponse('nologeado', content_type="application/json")
-
-@csrf_exempt
-def recibecliente(request):
-
-	data = json.loads(request.body)
-
-	data = json.dumps(data)
-
-	f = open('/var/www/html/cliente.json', 'w')
-	f.write(data)
-	f.close()
-
-	return HttpResponse('nologeado', content_type="application/json")
-
-@csrf_exempt
-def recibeservicios(request):
-
-	data = json.loads(request.body)
-
-	data = json.dumps(data)
-
-	f = open('/var/www/html/servicios.json', 'w')
-	f.write(data)
-	f.close()
-
-	return HttpResponse('nologeado', content_type="application/json")
 
 @csrf_exempt
 def marcacsv(request):
@@ -1984,80 +1671,43 @@ def corrige(request):
 	return HttpResponse('nologeado', content_type="application/json")
 
 
-@csrf_exempt
-def recibecoberturas(request):
-
-	data = json.loads(request.body)
-
-	data = json.dumps(data)
-
-	f = open('/var/www/html/coberturas.json', 'w')
-	f.write(data)
-	f.close()
-
-
-
-	return HttpResponse('nologeado', content_type="application/json")
-
-@csrf_exempt
-def recibegps(request):
-
-	data = json.loads(request.body)
-
-	data = json.dumps(data)
-
-	f = open('/var/www/html/gps.json', 'w')
-	f.write(data)
-	f.close()
-
-	return HttpResponse('nologeado', content_type="application/json")
-
-
-@csrf_exempt
-def recibefinanciamiento(request):
-
-	data = json.loads(request.body)
-
-	data = json.dumps(data)
-
-	f = open('/var/www/html/financiamiento.json', 'w')
-	f.write(data)
-	f.close()
-
-	return HttpResponse('nologeado', content_type="application/json")
-
-@csrf_exempt
-def recibededucibles(request):
-
-	data = json.loads(request.body)
-
-	data = json.dumps(data)
-
-	f = open('/var/www/html/deducibles.json', 'w')
-	f.write(data)
-	f.close()
-
-	return HttpResponse('nologeado', content_type="application/json")
 
 
 
 @csrf_exempt
 def subir(request):
 
-	send_mail('Hermes','Evento Enviado','cotiza@hermes.pe', ['joelunmsm@gmail.com'], fail_silently=False)
+	#send_mail('Hermes','Evento Enviado','cotiza@hermes.pe', ['joelunmsm@gmail.com'], fail_silently=False)
+
+
+	subject, from_email, to = 'hello', 'cotiza@hermes.pe', 'joelunmsm@gmail.com'
+	text_content = 'This is an important message.'
+	html_content = '<p>This is an <strong>important</strong> message.</p> <img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png">'
+	msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+	msg.attach_file('/var/www/hermes/out.pdf')
+	msg.attach_alternative(html_content, "text/html")
+	msg.send()
 
 	return HttpResponse('mmmmmmmmm', content_type="application/json")
 
+@csrf_exempt
 def generapdf(request):
-	# Create the HttpResponse object with the appropriate PDF headers.
-
-	for i in range(0,27):
-
-		TasaAsegur.objects.filter(anio=28-i).update(anio=0+i)
-	
 
 
-	return HttpResponse('total', content_type="application/json")
+	if request.method == 'POST':
+
+		data = json.loads(request.body)
+
+		body = data['data']
+
+		urlpdf = 'http://cotizador.hermes.pe:800/hermes/hermes/#'+body
+
+		print urlpdf
+
+		pdfkit.from_url('http://cotizador.hermes.pe:800/hermes/hermes/#/resultado/1165/1/29/2/1z2z4z9/6800/2017/1/90/Nuevo', 'out.pdf')
+
+
+	return HttpResponse(data, content_type="application/json")
 
 
 
@@ -2507,6 +2157,7 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio,anio):
 
 		if (int(precio) >= 75000 and int(precio)<=4000) or origenname=='Chino' or restringido==True or (tiponame=='Van' and usoname=='Particular'):
 
+
 			if 2 in progrimac:
 
 				progrimac.remove(2)
@@ -2587,7 +2238,7 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio,anio):
 
 		if usoname=='Transporte de Personal, Turistico, Escolar':
 
-			prog.append(30)
+			prog.append(39)
 
 			prog.remove(4)
 
@@ -2603,7 +2254,7 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio,anio):
 
 		#### Dorada
 
-		if tiponame=='Auto' and usoname=='Particular':
+		if (tiponame=='Auto' or tiponame=='Station Wagon') and usoname=='Particular':
 
 			prog.append(1)
 
@@ -2628,19 +2279,18 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio,anio):
 
 			prog.remove(24)
 
+		if usoname=='Comercial':
+
+			prog.append(1)
+
+			prog.append(24)
+
+
 		## Dorada Economica
 
 		if marcaname == 'TOYOTA' or marcaname =='NISSAN' or marcaname=='KIA' or marcaname=='CHEVROLET' or marcaname =='GEELY' or marcaname=='LIFAN' or marcaname=='CHERY' or marcaname=='GREAT WALL' or marcaname=='JAC' or marcaname=='INCAPOWER' or marcaname=='BYD' or marcaname=='CHANGE' or marcaname=='HAFEI' or marcaname=='HYUNDAI':
 
-			if (tiponame=='Auto' and usoname=='Particular') or (tiponame=='Station Wagon' and usoname=='Particular') or (tiponame=='Rural' and usoname=='Particular') :
-
-				prog.append(5)
-
-			if origenname=='Pick-UP':
-
-				prog.append(5)
-
-			if origenname=='Chino':
+			if (tiponame=='Auto' and usoname=='Particular') or (tiponame=='Station Wagon' and usoname=='Particular') or (tiponame=='Rural' and usoname=='Particular') or origenname=='Chino' or (tiponame=='Pick-UP' and usoname=='Particular'):
 
 				prog.append(5)
 
@@ -2655,6 +2305,16 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio,anio):
 		if (tiponame == 'Pick-UP') and (usoname =='Particular' or usoname=='Comercial' or usoname =='Transporte de Personal, Turistico, Escolar'):
 
 			prog.append(22)
+
+
+		## Dorada x2
+
+		if (tiponame == 'Pick-UP'):
+
+			if 24 in prog:
+
+				prog.remove(24)
+
 
 		## Taxi Individual
 
@@ -2683,7 +2343,7 @@ def asegprogram(request,aseguradora,modelo,uso,marca,tipo,precio,anio):
 
 		if (tiponame == 'Van' or tiponame == 'Rural' or tiponame == 'Omnibus' or tiponame=='Microbus') and usoname=='Transporte de Personal, Turistico, Escolar':
 
-			prog.append(34)
+			prog.append(19)
 
 
 
@@ -3079,6 +2739,9 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 	modelo = data['modelo']
 
+	antiguedad = data['antiguedad']
+
+
 	a = AutoValor.objects.get(id_marca_id=marca,id_modelo_id=modelo,id_tipo_id=data['tipo'])
 
 	id_auto_valor = a.id
@@ -3088,7 +2751,6 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 	tiponame= a.id_tipo.clase
 
 	modelname =a.id_modelo.name_model
-
 
 	# for m in a:
 
@@ -3106,8 +2768,6 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 	programapositiva = programa[2]
 
-
-
 	riesgohdi = 3
 	riesgorimac= 7
 	riesgopositiva = 3
@@ -3120,9 +2780,12 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 	nameriesgopacifico = 'Bajo Riesgo I'
 
 
+
 	if RiesgAseg.objects.filter(id_model_id=id_auto_valor,aseguradora_id=3):
 
 		t =RiesgAseg.objects.filter(id_model_id=id_auto_valor,aseguradora_id=3).values('id_riesg__tipo_riesgo')[0]['id_riesg__tipo_riesgo'].split(' ')[1]
+
+
 
 		if t == 'I':
 
@@ -3200,6 +2863,11 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 	anio = anioact - anio
 
+
+	if str(antiguedad) =='Nuevo' and anio==1:
+
+		anio = int(anio) - 1
+
 	demision = Parametros.objects.get(id=1).d_emision
 
 	igv = Parametros.objects.get(id=1).igv
@@ -3212,13 +2880,15 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 			tasa = None
 
-			## Programa Taxi
+			# Programa Taxi
 
 			if int(programapositiva) ==29:
 
 				if usoname=='Taxi/Publico':
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),id_uso__uso=usoname,riesgo_id=riesgopositiva)
+
+
 
 			## Comercial
 
@@ -3262,16 +2932,26 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 				tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),id_uso__uso=usoname,programa_id=programapositiva)
 
 
+			#Uso Transporte
+
+			if int(programapositiva) ==39:
+
+				tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),programa_id=programapositiva)
+
+
+
+
 			## Corporativo
 
-			#Descuentsos Positiva
+			# Descuentsos Positiva
 
-			
-
+		
 
 			if int(programapositiva) ==4:
 
-				tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),riesgo_id=riesgopositiva,programa_id=4)
+				if TasaAsegur.objects.filter(id_aseg_id=1,anio=int(anio),riesgo_id=riesgopositiva,programa_id=4):
+
+					tasa = TasaAsegur.objects.get(id_aseg_id=1,anio=int(anio),riesgo_id=riesgopositiva,programa_id=4)
 
 				if origenname == 'Chino' and tiponame != 'Pick-UP':
 
@@ -3285,7 +2965,7 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 					tasa = TasaAsegur.objects.filter(id_aseg_id=1,anio=int(anio),tipo__clase='Pick-UP',programa_id=4).exclude(origen='Chino')[0]
 
-			if AutoValor.objects.filter(id=id_auto_valor,permitido='No Permitido').count()>0:
+			if AutoValor.objects.filter(id=id_auto_valor,permitidopositiva='No Permitido').count()>0:
 
 				tasa = None
 
@@ -3364,11 +3044,6 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 				##Fin Primas Minimas Positiva 
 
-
-
-
-
-
 				aseguradora[i]['positivasubtotal'] = round((aseguradora[i]['positiva'] + 3*aseguradora[i]['positiva']/100),2)
 
 				aseguradora[i]['positivatotal'] = round((aseguradora[i]['positivasubtotal']+18*aseguradora[i]['positivasubtotal']/100),2)
@@ -3378,8 +3053,6 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 				aseguradora[i]['idriesgopositiva'] = riesgopositiva
 
 				aseguradora[i]['idriesgopositiva'] = riesgopositiva
-
-
 
 			else:
 
@@ -3444,9 +3117,17 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 			if e !='Si':
 
-				tasa = TasaAsegur.objects.get(id_aseg_id=3,anio=int(anio),categoria__categoria=nameriesgohdi)
+				if TasaAsegur.objects.filter(id_aseg_id=3,anio=int(anio),categoria__categoria=nameriesgohdi):
+
+					tasa = TasaAsegur.objects.get(id_aseg_id=3,anio=int(anio),categoria__categoria=nameriesgohdi)
 
 			if usoname=='Taxi/Publico':
+
+				tasa = None
+
+			# Programa Transporte
+
+			if int(uso) ==5:
 
 				tasa = None
 
@@ -3492,9 +3173,13 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 			# Dorada x2
 
+			pmafre = 0
+
 			if int(programamapfre)==24:
 
 				programamapfre = 1
+
+				pmafre = 24
 
 				if TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),riesgo_id=riesgomapfre,programa_id=programamapfre).count()>0:
 
@@ -3503,6 +3188,9 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 				if origenname == 'Chino':
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),origen='Chino',programa_id=programamapfre)
+
+				
+
 
 			# Dorada PickUp
 
@@ -3524,10 +3212,8 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 				if usoname == 'Comercial':
 
 					tasa = TasaAsegur.objects.filter(id_aseg_id=4,anio=int(anio),id_uso__uso=usoname,programa_id=programamapfre)[0]
-				
 
-
-
+			## Dorada Economica
 
 			if int(programamapfre)==5:
 
@@ -3542,6 +3228,7 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),tipo__clase=tiponame,programa_id=programamapfre)
 
+			## Dorada x2
 			if int(programamapfre)==14:
 
 				tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),riesgo_id=riesgomapfre,programa_id=programamapfre)
@@ -3550,10 +3237,13 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),tipo__clase=tiponame,programa_id=programamapfre)
 				
+			
+			#Camiones A
 			if int(programamapfre)==15:
 
 				tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),tipo__clase=tiponame,programa_id=programamapfre)
 				
+			#Camiones Menores
 			if int(programamapfre)==16:
 
 				tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),tipo__clase=tiponame,programa_id=programamapfre)
@@ -3566,14 +3256,19 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 				print 'Consultar'
 				
+			
+			#Transporte
 			if int(programamapfre)==19:
 
-				print 'Consultar'
+				tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),programa_id=programamapfre)
 				
+				
+			#VIP Mujer
 			if int(programamapfre)==20:
 
 				tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),riesgo_id=riesgomapfre,programa_id=programamapfre)
 				
+			#Taxi
 			if int(programamapfre)==21:
 
 				if riesgomapfre == 2:
@@ -3586,14 +3281,13 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 					tasa = TasaAsegur.objects.get(id_aseg_id=4,anio=int(anio),origen='Chino',programa_id=programamapfre)
 
+
 			if tasa !=None:
 
 				aseguradora[i]['tasamapfre'] = round(float(tasa.value)*int(descuentomapfre)/100,2)
 
-				if int(programamapfre)==24:
+				tasax1 = aseguradora[i]['tasamapfre']
 
-					aseguradora[i]['tasamapfre'] = round(float(tasa.value*2)*int(descuentomapfre)/100,2)
-				
 				aseguradora[i]['mapfre'] = round(aseguradora[i]['tasamapfre']*float(monto)/100,2)
 
 
@@ -3614,6 +3308,19 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 				aseguradora[i]['idriesgomapfre'] = riesgomapfre
 
+
+				if int(pmafre)==24:
+
+					aseguradora[i]['tasamapfre'] = round((float(tasa.value)*2)*int(descuentomapfre)/100,2)
+
+					mapf = round(aseguradora[i]['tasamapfre']*float(monto)/100,2)
+
+					mapfresubtotal = round((mapf + 3*mapf/100),2)
+
+					aseguradora[i]['mapfretotal'] = round((mapfresubtotal+18*mapfresubtotal/100),2)
+
+
+
 			else:
 
 				aseguradora[i]['mapfre']='No Aplica'
@@ -3626,7 +3333,9 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 				if tiponame != 'Pick-UP':
 
-					tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),riesgo_id=riesgorimac,programa_id=programarimac)
+					if TasaAsegur.objects.filter(id_aseg_id=5,anio=int(anio),riesgo_id=riesgorimac,programa_id=programarimac):
+
+						tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),riesgo_id=riesgorimac,programa_id=programarimac)
 
 				if tiponame == 'Pick-UP' and anio >= 3:
 
@@ -3669,7 +3378,7 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 					nameriesgopositiva = None
 
 
-			if int(programarimac) == 10:
+			if int(programarimac) == 10: #Vehicula Chino
 
 				tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),tipo__clase=tiponame,programa_id=programarimac)
 
@@ -3693,9 +3402,9 @@ def primaneta(request,descuento,descuentopositiva,descuentomapfre):
 
 			if int(programarimac) == 12:
 
+				print 'entre transporte'
 
-
-				#tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),programa_id=programarimac).exclude(tipo__clase='Panel')
+				tasa = TasaAsegur.objects.get(id_aseg_id=5,anio=int(anio),programa_id=programarimac,ubicacion='Lima')
 
 				if 'H-1' in modelname:
 
@@ -3827,15 +3536,11 @@ def riesgomodelo(request,modelo):
 @csrf_exempt
 def getgps(request,modelo,marca,tipo,uso,monto,anio,programa):
 
-
 	gpspositiva = 'No'
 	gpsrimac = 'No'
 	gpspacifico = 'No'
 	gpsmapfre = 'No'
 	gpshdi = 'No'
-
-
-
 
 	auto =AutoValor.objects.get(id_modelo_id=modelo,id_marca_id=marca,id_tipo_id=tipo)
 
@@ -3986,6 +3691,8 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 	prorimac = pro[1]
 
 
+
+
 	if int(prorimac) == 25 or int(prorimac)== 26:
 
 		prorimac= 2
@@ -4047,6 +3754,12 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 				cobertura[i]['hdi'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=3).value
 			
+			if int(uso)==5: #Transporte
+
+				cobertura[i]['hdi']= None
+
+
+
 		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=1,programa_id=propositiva).count()==1:
 
 
@@ -4070,13 +3783,9 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 		if CobertAsegur.objects.filter(id_cob=cobertura[i]['id_cobert'],id_aseg_id=5,programa_id=prorimac).count()>0:
 
-			if int(tipo) !=3:
-			
-				cobertura[i]['rimac'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=5,programa_id=prorimac).value
+			cobertura[i]['rimac'] = CobertAsegur.objects.get(id_cob=cobertura[i]['id_cobert'],id_aseg_id=5,programa_id=prorimac).value
 
-			else:
 
-				cobertura[i]['rimac'] =None
 
 
 	data_dict = ValuesQuerySetToDict(cobertura)
@@ -4087,15 +3796,20 @@ def cobertura(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 
 @csrf_exempt
-def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
+def deducible(request,orden_id,uso,anio,modalidad,programa,modelo,marca,monto):
 
-	auto = AutoValor.objects.filter(id_modelo_id=modelo)
+	auto = AutoValor.objects.filter(id_modelo_id=modelo,id_marca=marca)
+
+	print 'monto',monto
 
 	for t in auto:
 
 		tipo = t.id_tipo.id_clase
 
 		id_auto_valor=t.id
+
+
+	origen = AutoValor.objects.get(id=id_auto_valor).id_marca.origen
 
 	riesgorimac = 6
 
@@ -4149,13 +3863,19 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 			#deducible[i]['hdi'] = DeducAsegur.objects.get(riesgo_id=riesgohdi,id_deduc=deducible[i]['id_deduc'],id_aseg_id=3,id_uso=uso,tipo__id_clase=tipo).value
 
+		if int(uso)==5: #Transporte
+
+			deducible[i]['hdi']= None
+
 		if  DeducAsegur.objects.filter(riesgo_id=riesgopositiva,id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).count()>0:
 
 			if int(tipo)==6 :
 
 				tipo=3
 
-			deducible[i]['positiva'] = DeducAsegur.objects.get(riesgo_id=riesgopositiva,id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva,tipo__id_clase=tipo).value
+			if DeducAsegur.objects.filter(riesgo_id=riesgopositiva,id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).count()>0:
+
+				deducible[i]['positiva'] = DeducAsegur.objects.get(riesgo_id=riesgopositiva,id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).value
 
 		if int(propositiva) == 29:
 
@@ -4163,24 +3883,63 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 				deducible[i]['positiva'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).value
 
-		if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).count()==1:
+		# Transporte
 
-			if int(uso)!=20:
+		if int(propositiva) == 39:
 
-				deducible[i]['pacifico'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).value
+			if  DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).count()==1:
+
+				deducible[i]['positiva'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=1,programa_id=propositiva).value
+
+		
 
 
+		# if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).count()==1:
+
+		# 	if int(uso)!=20:
+
+		# 		deducible[i]['pacifico'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2).value
+
+		if int(uso)!=20:
+
+			if int(monto)<80000:
+
+				if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2,programa__program='Pacifico menor a 80K').count()==1:
+
+					deducible[i]['pacifico'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2,programa__program='Pacifico menor a 80K').value
+
+
+			if int(monto)>=80000  and int(monto)<=120000:
+
+				if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2,programa__program='Pacifico mayor a 80K').count()==1:
+
+					deducible[i]['pacifico'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2,programa__program='Pacifico mayor a 80K').value
+
+			if int(tipo)==6  and int(monto)<=120000: #Pickup Pacifico
+
+				if DeducAsegur.objects.filter(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2,programa__program='Pacifico mayor a 80K').count()==1:
+
+					deducible[i]['pacifico'] = DeducAsegur.objects.get(id_deduc=deducible[i]['id_deduc'],id_aseg_id=2,programa__program='Pacifico PickUp').value
 
 
 		## Mapfre
 
 		if int(promapfre) == 1:
 
+			if DeducAsegur.objects.filter(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
 
-			if DeducAsegur.objects.filter(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],tipo__id_clase=tipo,id_aseg_id=4,programa_id=promapfre).count()==1:
 
-			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],tipo__id_clase=tipo,id_aseg_id=4,programa_id=promapfre).value
+
+			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(riesgo_id=riesgomapfre,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
 			
+			if origen =='Chino':
+
+				if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],riesgo__tipo_riesgo='Chinos',id_aseg_id=4,programa_id=promapfre):
+
+					deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],riesgo__tipo_riesgo='Chinos',id_aseg_id=4,programa_id=promapfre).value
+
+
+
 		if int(promapfre) == 21:
 
 			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
@@ -4203,6 +3962,11 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
 	
+			if origen =='Chino':
+
+				if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],riesgo__tipo_riesgo='Chinos',id_aseg_id=4,programa_id=promapfre):
+
+					deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],riesgo__tipo_riesgo='Chinos',id_aseg_id=4,programa_id=promapfre).value
 
 		if int(promapfre) == 24:
 
@@ -4210,6 +3974,22 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
 	
+			if origen =='Chino':
+
+				if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],riesgo__tipo_riesgo='Chinos',id_aseg_id=4,programa_id=promapfre):
+
+					deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],riesgo__tipo_riesgo='Chinos',id_aseg_id=4,programa_id=promapfre).value
+
+		# Transporte
+
+		if int(promapfre) == 19:
+
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).count()>0:
+
+			 	deducible[i]['mapfre'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=4,programa_id=promapfre).value
+
+
+
 		## Deducible rimac
 
 		if int(prorimac) == 2:
@@ -4218,15 +3998,15 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 			# 	deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
 
-			if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()>0:		
+			if DeducAsegur.objects.filter(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).count()==1:		
 
-				deducible[i]['rimac'] = DeducAsegur.objects.get(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
+				deducible[i]['rimac'] = DeducAsegur.objects.get(riesgo_id=riesgorimac,id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).value
 							
 			if int(tipo)==6:
 
-				if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).count()==1:
+				if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).count()==1:
 				
-					deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,tipo__id_clase=tipo,programa_id=prorimac).value
+					deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).value
 	
 		if int(prorimac) == 6:
 
@@ -4236,9 +4016,20 @@ def deducible(request,orden_id,uso,anio,modalidad,programa,modelo):
 
 		if int(prorimac) == 10:
 
-			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,id_uso_id=uso,programa_id=prorimac,tipo__id_clase=tipo).count()==1:
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac,riesgo__tipo_riesgo='Chinos').count()>0:
 			
-				deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,id_uso_id=uso,programa_id=prorimac,tipo__id_clase=tipo).value
+				deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac,riesgo__tipo_riesgo='Chinos').value
+
+		# Transporte
+
+		if int(prorimac) == 12:
+
+			if DeducAsegur.objects.filter(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).count()>0:
+			
+				deducible[i]['rimac'] = DeducAsegur.objects.get(id_deduc_id=deducible[i]['id_deduc'],id_aseg_id=5,programa_id=prorimac).value
+
+
+
 
 		if int(prorimac) == 11:
 
@@ -4284,6 +4075,12 @@ def servic(request,uso,programa):
 
 				servicio[i]['hdi'] = ServicAsegur.objects.get(id_serv=servicio[i]['id_serv'],id_aseg_id=3).valor
 
+		if int(uso)==5:
+
+				servicio[i]['hdi'] = None
+
+
+		
 
 		if ServicAsegur.objects.filter(id_serv=servicio[i]['id_serv'],id_aseg_id=1,id_program_id=propositiva).count()==1:
 
@@ -4330,14 +4127,6 @@ def servicio(request):
 	return HttpResponse(data, content_type="application/json")
 
 
-# @csrf_exempt
-# def postin(request):
-
-# 	if request.method == 'POST':
-
-# 		print json.loads(request.body)
-
-# 	return HttpResponse('xxxxx', content_type="application/json")
 
 
 @csrf_exempt
@@ -4442,8 +4231,7 @@ def date_handler(obj):
 
 	return obj.isoformat() if hasattr(obj, 'isoformat') else obj
 
-def ValuesQuerySetToDict(vqs):
-	return [item for item in vqs]
+
 
 
 @csrf_exempt
@@ -4687,7 +4475,7 @@ def addriesgoclase(request):
 
 
 
-						RiesgAseg(id_riesg_id=int(riesgo),id_model_id=id_modelo,aseguradora_id=int(aseguradora)).save()
+						RiesgAseg(id_riesg_id=int(riesgo),id_model_id=id_modelo,aseguradora_id=int(aseguradora),programa_id=33).save()
 
 
 
@@ -5340,7 +5128,7 @@ def enviaemail(request):
 			tipo = m.id_tipo.clase
 			modelo = m.id_modelo.name_model
 
-		msj = 'Estimado cliente '+ str(name) +' , el siguiente link detalla la cotizacion del auto ' + str(marca) +' '+ str(modelo)+ ' valorizado en ' +str(precio)+'. Adjunto el link: '+ str('http://cotizador.hermes.pe:800/html/pdfout.pdf')
+		msj = 'Estimado cliente '+ str(name) +' , el siguiente link detalla la cotizacion del auto ' + str(marca) +' '+ str(modelo)+ ' valorizado en ' +str(precio)+'. Adjunto el link: '+ str('http://cotizador.hermes.pe:800/hermes/out.pdf')
 
 		
 		id = Clientes.objects.get(id_cliente=cli).id_cliente
@@ -5353,6 +5141,23 @@ def enviaemail(request):
 			f = open('/var/www/html/email.txt', 'a')
 			f.write(str(email)+'\n')
 			f.close()
+
+
+			subject, from_email, to = 'Cotizacion Hermes', 'cotiza@hermes.pe', str(email)
+			text_content = 'This is an important message.'
+			#html_content = '<p>This is an <strong>important</strong> message.</p> <img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png">'
+			
+			html_content = '<img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png"> <br> Estimado cliente <strong>'+ str(name) +': </strong> <br><br><br>Adjuntamos en formato PDF el detalle de la cotizacion del auto <strong>' + str(marca) +' '+ str(modelo)+ '</strong> valorizado en <strong>USD ' +str(precio)+'</strong><br><br>'
+
+
+
+
+			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
+			msg.attach_file('/var/www/hermes/out.pdf')
+			msg.attach_alternative(html_content, "text/html")
+			msg.send()
+
+
 
 			#send_mail('Hermes',msj,'cotiza@hermes.pe', [email], fail_silently=False)
 
@@ -5456,8 +5261,6 @@ def saveservicio(request):
 
 		data = json.loads(request.body)
 
-
-
 		servicio = data['servicio']['id_serv']
 
 		value = data['valor']
@@ -5477,7 +5280,6 @@ def saveservicio(request):
 def savefinanc(request):
 
 	data = json.loads(request.body)
-
 
 	#{u'id_aseg__name_asegurad': u'Positiva', u'id_finan__financiamiento': u'Cuotas Sin Interes', u'clase': {u'clase': u'Auto', u'id_clase': 1}, u'tea': 676, u'cuota': u'787', u'riesgo': {u'id_riesgo': 84, u'tipo_riesgo': u'Alta Gama hasta $40k'}, u'aseguradora': {u'id_asegurad': 1, u'name_asegurad': u'Positiva'}}
 

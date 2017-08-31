@@ -51,7 +51,6 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
         return user;
     }
 
-    console.log('User',getUserFromToken().user_id)
 
     $scope.user = getUserFromToken().user_id
 
@@ -78,11 +77,9 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
 
     $scope.model = {}
 
-    console.log($scope.antiguedad)
 
     $scope.data = function (todo) {
 
-        console.log('hdhdhd',todo)
 
 
     }
@@ -151,7 +148,6 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
 
     $scope.logear = function (todo) {
 
-        console.log
 
        
         $http({
@@ -162,7 +158,7 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
         }).
         success(function(data) {
           
-          console.log(data)
+
 
         })
 
@@ -187,7 +183,6 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
     $http.get(host+"/anio/").success(function(response) {$scope.anio = response;
 
 
-        console.log($scope.anio[12])
         //$scope.model.anio = $scope.anio[0]
 
       
@@ -218,7 +213,7 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
 
         $scope.modelo = response
 
-        console.log($scope.modelo)
+
 
       
     });
@@ -227,7 +222,6 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
 
     $scope.evaluaanio=function(data){
 
-        console.log('aniooooo',data)
 
         if(data.id_anio<28){
 
@@ -249,13 +243,12 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
 
             $scope.claseModelo = response
 
-            console.log('claseModelo',response)
+
 
             $scope.vari= $scope.claseModelo[0].id
 
             $http.get(host+"/riesgomodelo/"+$scope.vari+'/').success(function(response) {
 
-            console.log("/riesgomodelo/",response)
 
             varx = ''
 
@@ -297,13 +290,12 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
 
     $scope.obtenerprecio = function (data) {
 
-        console.log('obtenerprecio',data)
+
 
   
 
         $http.get(host+"/precio/"+$scope.model.claseModelo.id_modelo+'/'+data.anio.anio_antig+'/').success(function(response) {
 
-        console.log('precio',response)
 
         $scope.precio = response
              
@@ -321,7 +313,6 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
 
         $http.get(host+"/usos/"+$scope.model.claseModelo.id_tipo).success(function(response) {
 
-            console.log('response',response)
 
         $scope.uso = response
              
@@ -344,11 +335,27 @@ $scope.selected = $scope.items[0];
 
 $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
 
-       modelo = model.modelo.id_modelo
+        modelo = model.modelo.id_modelo
 
-       tipo = model.claseModelo.id_tipo
+        tipo = model.claseModelo.id_tipo
 
-       marca = model.marca.id_marca
+        antiguedad = 'Usado'
+
+
+        for (var prop in model) {
+
+              if (prop == 'antiguedad'){
+
+                antiguedad = model.antiguedad.label
+                
+              }
+        
+        }
+
+
+        
+
+        marca = model.marca.id_marca
 
         var todo={
 
@@ -394,7 +401,7 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
 
         }  
         
-        console.log('ubicP',$scope.model.ubicP)
+
 
         $http({
         url: host+"/cotiSave/",
@@ -409,10 +416,8 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
       /// Trae Programas
 
 
-      console.log('model.anio......',model.anio)
 
-
-      $http.get(host+"/asegprogram/"+4+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio+'/'+model.anio.id_anio).success(function(response) {
+        $http.get(host+"/asegprogram/"+4+"/"+model.modelo.id_modelo+'/'+model.uso+'/'+marca+'/'+tipo+'/'+$scope.precio+'/'+model.anio.id_anio).success(function(response) {
 
 
         $scope.pm = response; 
@@ -462,9 +467,41 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
 
                 programita = $scope.pm+'z'+$scope.pr+'z'+$scope.pp+'z9'
 
-                console.log('programita................................',programita)
 
-                $location.url('/resultado/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca)
+                                urlenvia = '/resultado/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad
+
+                todo = {
+
+                    data:urlenvia
+                }
+
+
+                // Envia URL al backend
+                
+                        $http({
+                        url: host+"/generapdf/",
+                        data: todo,
+                        method: 'POST',
+
+                        }).
+                        success(function(data) {
+
+
+
+
+                        })
+
+
+
+                $location.url('/resultado/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad)
+
+                
+
+
+
+
+
+
 
                });
 

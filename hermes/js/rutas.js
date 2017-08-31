@@ -15,7 +15,7 @@
                     templateUrl: 'webcotiz.html',
                     controller: 'Cotiza'
                 }).
-                when('/resultado/:orderId/:uso/:anio/:modalidad/:programa/:modelo/:precio/:tipo/:marca', {
+                when('/resultado/:orderId/:uso/:anio/:modalidad/:programa/:modelo/:precio/:tipo/:marca/:antiguedad', {
                     templateUrl: 'resultadofiltro.html',
                     controller: 'Resultado'
 

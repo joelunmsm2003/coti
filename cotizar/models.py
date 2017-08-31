@@ -110,7 +110,7 @@ class AutoValor(models.Model):
     id_modelo = models.ForeignKey('Modelo', models.DO_NOTHING, db_column='id_modelo')
     id_tipo = models.ForeignKey('Clase', models.DO_NOTHING, db_column='id_tipo')
     traccion = models.IntegerField()
-    permitido = models.CharField(max_length=100)
+    permitidopositiva = models.CharField(max_length=100)
     excluidohdi = models.CharField(max_length=100)
     categoriahdi = models.CharField(max_length=100)
     excluidorimac = models.CharField(max_length=100)
@@ -121,8 +121,10 @@ class AutoValor(models.Model):
         db_table = 'auto_valor'
         verbose_name = 'Marca / Modelo'
 
-    def __unicode__(self,obj):
-        return obj.id_modelo.name_model
+    def __unicode__(self):
+
+
+        return str(self.id)
 
 
 

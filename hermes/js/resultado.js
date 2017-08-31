@@ -120,17 +120,16 @@ $scope.descuentomapfre.value=100
 
         $scope.descuentorimac = descuento
 
+        $scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)        
 
-         $scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)
     }
 
 
     $scope.descuentopositiv = function(descuento){
 
-
         $scope.descuentopositiva =descuento
 
-         $scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)
+        $scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)
     }
 
 
@@ -169,6 +168,8 @@ $scope.descuentomapfre.value=100
     $scope.anio = $routeParams.anio
 
     $scope.monto = $routeParams.precio
+
+    $scope.antiguedad = $routeParams.antiguedad
 
 
 
@@ -243,13 +244,6 @@ $scope.descuentomapfre.value=100
 
   $http.get(host+"/getgps/"+$scope.modelo+"/"+$scope.marca+"/"+$scope.tipo+"/"+$scope.uso+"/"+$scope.monto+'/'+$scope.anio+'/'+$scope.parametros.programa).success(function(response) {
 
-      // $http({
-        
-      //   url: host+"/recibegps/",
-      //   data: response,
-      //   method: 'POST',
-     
-      //   })
 
     $scope.gps = response
 
@@ -261,13 +255,7 @@ $scope.descuentomapfre.value=100
 
         var f = new Date();
 
-          // $http({
 
-          //   url: host+"/recibecliente/",
-          //   data: response,
-          //   method: 'POST',
-         
-          //   })
 
 
         $scope.cliente.fecha = f.getDate() + "/" + (f.getMonth() +1) + "/" + f.getFullYear()
@@ -293,25 +281,17 @@ $scope.descuentomapfre.value=100
 
             $scope.cobertura = response;
 
-            // $http({
-            // url: host+"/recibecoberturas/",
-            // data: $scope.cobertura,
-            // method: 'POST',
-         
-            // })
+
 
         });
 
-         $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/").success(function(response) {
+
+
+         $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/"+$scope.marca+"/"+$scope.monto+"/").success(function(response) {
 
             $scope.deducible = response;
 
-            //   $http({
-            // url: host+"/recibededucibles/",
-            // data: $scope.deducible,
-            // method: 'POST',
-         
-            // })
+
 
         });
 
@@ -335,25 +315,15 @@ $scope.descuentomapfre.value=100
 
             $scope.cobertura = response;
 
-            // $http({
-            // url: host+"/recibecoberturas/",
-            // data: $scope.cobertura,
-            // method: 'POST',
-         
-            // })
+
 
         });
 
-         $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/").success(function(response) {
+         $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/"+$scope.marca+"/"+$scope.monto+"/").success(function(response) {
 
             $scope.deducible = response;
 
-            //   $http({
-            // url: host+"/recibededucibles/",
-            // data: $scope.deducible,
-            // method: 'POST',
-         
-            // })
+
 
         });
 
@@ -388,12 +358,7 @@ $scope.descuentomapfre.value=100
 
             $scope.cobertura = response;
 
-            // $http({
-            // url: host+"/recibecoberturas/",
-            // data: $scope.cobertura,
-            // method: 'POST',
-         
-            // })
+
 
         });
 
@@ -405,16 +370,11 @@ $scope.descuentomapfre.value=100
             $scope.muestradescuento = true
         }
 
-        $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/").success(function(response) {
+        $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/"+$scope.marca+"/"+$scope.monto+"/").success(function(response) {
 
         $scope.deducible = response;
 
-          // $http({
-          //   url: host+"/recibededucibles/",
-          //   data: $scope.deducible,
-          //   method: 'POST',
-         
-          //   })
+
 
         });
 
@@ -438,12 +398,7 @@ $scope.descuentomapfre.value=100
 
     //         $scope.cobertura = response;
 
-    //         $http({
-    //         url: host+"/recibecoberturas/",
-    //         data: $scope.cobertura,
-    //         method: 'POST',
-         
-    //         })
+
 
     //     });
 
@@ -451,12 +406,6 @@ $scope.descuentomapfre.value=100
 
     //     $scope.deducible = response;
 
-    //       $http({
-    //         url: host+"/recibededucibles/",
-    //         data: $scope.deducible,
-    //         method: 'POST',
-         
-    //         })
 
     //     });
 
@@ -481,12 +430,6 @@ $scope.descuentomapfre.value=100
 
     //         $scope.cobertura = response;
 
-    //         $http({
-    //         url: host+"/recibecoberturas/",
-    //         data: $scope.cobertura,
-    //         method: 'POST',
-         
-    //         })
 
     //     });
 
@@ -494,12 +437,7 @@ $scope.descuentomapfre.value=100
 
     //     $scope.deducible = response;
 
-    //       $http({
-    //         url: host+"/recibededucibles/",
-    //         data: $scope.deducible,
-    //         method: 'POST',
-         
-    //         })
+
 
     //     });
 
@@ -534,21 +472,6 @@ $scope.descuentomapfre.value=100
 
 
 
-            // $http({
-            // url: host+"/recibecoberturas/",
-            // data: $scope.cobertura,
-            // method: 'POST',
-         
-            // })
-
-            // $http({
-            // url: host+"/pdfx/",
-            // data: $scope.absUrl,
-            // method: 'POST',
-         
-            // }).
-            // success(function(data) {
-            // })
 
         });
 
@@ -559,12 +482,6 @@ $scope.descuentomapfre.value=100
         $scope.servic = response;
 
 
-        // $http({
-        //     url: host+"/recibeservicios/",
-        //     data: $scope.servic,
-        //     method: 'POST',
-         
-        //     })
 
         });
 
@@ -579,18 +496,11 @@ $scope.descuentomapfre.value=100
 */
 
 
-     $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.parametros.programa+'/'+$scope.modelo+"/").success(function(response) {
+     $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.parametros.programa+'/'+$scope.modelo+"/"+$scope.marca+"/"+$scope.monto+"/").success(function(response) {
 
         $scope.deducible = response;
 
 
-
-          // $http({
-          //   url: host+"/recibededucibles/",
-          //   data: $scope.deducible,
-          //   method: 'POST',
-         
-          //   })
 
         });
 
@@ -598,10 +508,6 @@ $scope.descuentomapfre.value=100
     $scope.model = {}
 
     $scope.traeprima = function(descuento,descuentopositiva,descuentomapfre){
-
-
-
-
 
 
     $http({
@@ -628,10 +534,6 @@ $scope.descuentomapfre.value=100
         $scope.rimac = data[4]['rimac']
 
 
-
-
-
-
         $scope.hdisubtotal = data[0]['hdisubtotal']
         $scope.positivasubtotal = data[3]['positivasubtotal']
         $scope.mapfresubtotal = data[1]['mapfresubtotal']
@@ -649,7 +551,6 @@ $scope.descuentomapfre.value=100
 
         $scope.riesgohdi =data[0]['riesgohdi']
         $scope.idriesgohdi =data[0]['idriesgohdi']      
-
         $scope.riesgorimac =data[4]['riesgo']
         $scope.idriesgo =data[4]['idriesgo']
 
@@ -745,16 +646,9 @@ $scope.descuentomapfre.value=100
         // $scope.pdf.pacificototal = data[2]['pacificototal']
         // $scope.pdf.rimactotal = data[4]['rimactotal']
 
-        // $http({
 
-        //     url: host+"/recibetasas/",
-        //     data: $scope.pdf,
-        //     method: 'POST',
-
-        //     })
 
     })
-
 
     }
 
@@ -775,19 +669,19 @@ $scope.descuentomapfre.value=100
 
 
 
-    // $http({
+    $http({
 
-    //     url: host+"/enviaemail/",
-    //     data: $routeParams,
-    //     method: 'POST',
+        url: host+"/enviaemail/",
+        data: $routeParams,
+        method: 'POST',
 
-    // }).
-    // success(function(data) {
+    }).
+    success(function(data) {
 
-    //     console.log(data)
+        console.log(data)
 
 
-    // })
+    })
 
 
 

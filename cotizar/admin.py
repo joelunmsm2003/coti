@@ -13,7 +13,9 @@ from django.utils.translation import ugettext_lazy
 
 @admin.register(Marca)
 class MarcaAdmin(admin.ModelAdmin):
-    list_display = ('id_marca','name_marca')
+    list_display = ('id_marca','name_marca','origen')
+    list_editable = ('origen',)
+    search_fields = ('origen',)
 
 @admin.register(Servicios)
 class ServiciosAdmin(admin.ModelAdmin):
@@ -22,7 +24,7 @@ class ServiciosAdmin(admin.ModelAdmin):
 
 @admin.register(Programa)
 class ProgramAdmin(admin.ModelAdmin):
-    list_display = ('program',)
+    list_display = ('id_program','program',)
     search_fields = ('program',)
 
     
@@ -34,13 +36,18 @@ class CoberturaAdmin(admin.ModelAdmin):
 class AseguradoraAdmin(admin.ModelAdmin):
     list_display = ('id_asegurad','name_asegurad')
 
-
+@admin.register(Clase)
+class ClaseAdmin(admin.ModelAdmin):
+    list_display = ('id_clase','clase')
 
 @admin.register(TasaAsegur)
 class TasaAsegurAdmin(admin.ModelAdmin):
-	list_display = ('get_aseguradora','get_programa','get_uso','get_riesgo','value','origen','anio')
+	list_display = ('get_aseguradora','get_programa','get_uso','get_riesgo','origen','anio','value')
 	list_editable = ('anio','value')
+	list_filter = ('anio','programa__program')
 	search_fields = ('id_aseg__name_asegurad','programa__program','riesgo__tipo_riesgo','origen','id_uso__uso','anio')
+
+
 	def get_programa(self, obj):
 		return obj.programa.program
 	
@@ -76,12 +83,40 @@ class ModeloAdmin(admin.ModelAdmin):
 	search_fields = ('name_model',)
 
 
+@admin.register(Gps)
+class GpsAdmin(admin.ModelAdmin):
+	list_display = ('id','get_modelo','aseguradora','marca','modelo','tipo','riesgo','programa','value')
+	list_filter = ('id_aseg','id_auto__id_marca__name_marca','id_auto__id_modelo__name_model')
+	search_fields = ('id_aseg__name_asegurad','id_auto__id_marca__name_marca','id_auto__id','id_auto__id_modelo__name_model','id_riesg__tipo_riesgo','id_prog__program','value')
+	
+	def aseguradora(self, obj):
+		return obj.id_aseg.name_asegurad
+
+	def riesgo(self, obj):
+		return obj.id_riesg.tipo_riesgo
+
+	def modelo(self, obj):
+		return obj.id_auto.id_modelo.name_model
+
+	def marca(self, obj):
+		return obj.id_auto.id_marca.name_marca
+
+	def tipo(self, obj):
+		return obj.id_auto.id_tipo.clase
+
+	def programa(self, obj):
+		return obj.id_prog.program
+
+	def get_modelo(self,obj):
+		return obj.id_auto.id
+
 
 
 @admin.register(ProgAseg)
 class ProgAsegAdmin(admin.ModelAdmin):
 	list_display = ('get_aseguradora','get_programa',)
 	search_fields = ('id_aseg__name_asegurad','id_prog__program')
+	list_filter = ('id_aseg',)
 	def get_programa(self, obj):
 		return obj.id_prog.program
 	def get_aseguradora(self, obj):
@@ -90,7 +125,7 @@ class ProgAsegAdmin(admin.ModelAdmin):
 
 @admin.register(RiesgAseg)
 class RiesgAsegAdmin(admin.ModelAdmin):
-	list_display = ('id','get_modelo','aseguradora','marca','modelo','riesgo','programa')
+	list_display = ('id','get_modelo','aseguradora','marca','modelo','tipo','riesgo','programa')
 	list_filter = ('aseguradora',)
 	search_fields = ('aseguradora__name_asegurad','id_model__id_marca__name_marca','id_model__id_modelo__name_model','id_riesg__tipo_riesgo','programa__program')
 	
@@ -124,13 +159,13 @@ class RiesgAsegAdmin(admin.ModelAdmin):
 class AutoValorAdmin(admin.ModelAdmin):
 
 
-	list_display = ('id','get_marca','get_modelo','get_clase','traccion','mapfretaxialto')
+	list_display = ('id','get_marca','get_modelo','get_clase','traccion','mapfretaxialto','permitidopositiva')
 	list_filter = (
 		('id_marca', RelatedOnlyFieldListFilter),
 	)
-	list_editable = ('traccion','mapfretaxialto')
+	list_editable = ('traccion','mapfretaxialto','permitidopositiva')
 	admin_order_field = ('id_marca',)
-	search_fields = ('id_marca__name_marca','id_modelo__name_model')
+	search_fields = ('id_marca__name_marca','id_modelo__name_model','permitidopositiva')
 
 	def get_marca(self, obj):
 		return obj.id_marca.name_marca
@@ -186,6 +221,7 @@ class CobertAsegurAdmin(admin.ModelAdmin):
 
 	list_display = ('get_aseguradora','get_cobertura','get_programa','get_uso','get_tipo','value')
 	list_editable = ('value',)
+	list_filter = ('id_cob__descripcion','programa__program')
 
 	search_fields = ('id_aseg__name_asegurad','id_cob__descripcion','programa__program','id_uso__uso','tipo__clase','value')
 
@@ -223,6 +259,8 @@ class DeducAsegurAdmin(admin.ModelAdmin):
 	list_display = ('get_aseguradora','get_deduccion','get_programa','get_uso','get_tipo','get_riesgo','value')
 
 	list_editable = ('value',)
+
+	list_filter = ('id_deduc__deducible','programa__program')
 
 	search_fields = ('id_aseg__name_asegurad','id_deduc__deducible','programa__program','id_uso__uso','tipo__clase','riesgo__tipo_riesgo','value')
 
