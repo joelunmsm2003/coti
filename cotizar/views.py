@@ -5128,9 +5128,11 @@ def enviaemail(request):
 		msj = 'Estimado cliente '+ str(name) +' , el siguiente link detalla la cotizacion del auto ' + str(marca) +' '+ str(modelo)+ ' valorizado en ' +str(precio)+'. Adjunto el link: '+ str('http://cotizador.hermes.pe:800/hermes/out.pdf')
 
 		
-		flag  = Clientes.objects.get(id_cliente=orderId).chose_informat
+		#flag  = Clientes.objects.get(id_cliente=orderId).chose_informat
 
-		if flag == 1:
+		flag = 1
+
+		if int(flag) == 1:
 
 
 			f = open('/var/www/html/email.txt', 'a')
@@ -5143,9 +5145,6 @@ def enviaemail(request):
 			#html_content = '<p>This is an <strong>important</strong> message.</p> <img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png">'
 			
 			html_content = '<img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png"> <br><br><br> Estimado cliente <strong>'+ str(name) +': </strong> <br><br><br>Adjuntamos en formato PDF el detalle de la cotizacion del auto <strong>' + str(marca) +' '+ str(modelo)+ '</strong> valorizado en <strong>USD ' +str(precio)+'</strong><br><br>'
-
-
-
 
 			msg = EmailMultiAlternatives(subject, text_content, from_email, [to])
 			msg.attach_file('/var/www/hermes/out.pdf')
