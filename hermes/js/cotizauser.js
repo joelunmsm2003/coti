@@ -1,6 +1,7 @@
+var app = angular.module('myApp', ['ngRoute','ngStorage']);
 
 
-function CotizaUser($scope,$http,$filter,$location,$localStorage,NgMap) {
+app.controller('CotizaUser', function($scope,$http,$filter,$location,$localStorage) {
 
     $scope.riesgo = 8
 
@@ -11,6 +12,7 @@ function CotizaUser($scope,$http,$filter,$location,$localStorage,NgMap) {
     $scope.ubicP= true
 
 
+    host ='http://cotizador.hermes.pe:8000'
 
 
   $scope.autoRotate = function() {
@@ -22,9 +24,6 @@ function CotizaUser($scope,$http,$filter,$location,$localStorage,NgMap) {
       }
     }
    
-
-      
-
 
       function urlBase64Decode(str) {
         var output = str.replace('-', '+').replace('_', '/');
@@ -526,10 +525,10 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
 
 
 
-                $location.url('/resultadouser/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad)
+                //$location.url('/resultadouser/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad)
 
                 
-
+                window.location.href = 'http://cotizador.hermes.pe:800/hermes/hermes/#'+urlenvia;
 
 
 
@@ -547,5 +546,6 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
     };
 
 
-}
+});
+
 
