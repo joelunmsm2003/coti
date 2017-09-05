@@ -24,9 +24,7 @@
 			<form class="sky-form" ng-submit="saveContact(model,precio,check.ubicL,ubicP)">
 				
 			
-				<h3>Hermes Corredores de Seguros (Version Admin)</h3>
-
-				<a href='#/cotizauser'  class="btn btn-default btn-sm">Version Usuario FInal</a>
+				<h3>Hermes Corredores de Seguros (Usuario Final)</h3>
 
 				
 
@@ -91,7 +89,7 @@
 							<div class="col-md-3">
 								Modalidad:								
 							
-									<select ng-options="item as item.name_modalidad for item in modalidad" type="text" class="form-control" ng-model="model.modalidad" required =""  ></select>
+									<select ng-options="item as item.name_modalidad for item in modalidad" type="text" class="form-control" ng-model="model.modalidad"   ></select>
 						
 							</div>
 <!-- 
@@ -141,7 +139,7 @@
 					
 						Email:
 							<i class="icon-append icon-user"></i>
-							<input   type="text" ng-model="model.email"  class='form-control'>
+							<input   type="text" ng-model="model.email"  value='joelunmsm@gmail.com' class='form-control'>
 						
 						</div>
 
@@ -154,7 +152,7 @@
 						</div>
 
 						<div class="col-md-3">
-						<input ng-model="check" type="checkbox"  name="checkbox"> Envia esta cotización a tu correo
+						<input ng-model="check" type="checkbox" true name="checkbox"> Envia esta cotización a tu correo
 						</div>
 
 						<br></br><br></br>

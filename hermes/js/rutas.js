@@ -15,12 +15,19 @@
                     templateUrl: 'webcotiz.html',
                     controller: 'Cotiza'
                 }).
+
+                when('/cotizauser', {
+                    templateUrl: 'webcotizuser.html',
+                    controller: 'CotizaUser'
+                }).
                 when('/resultado/:orderId/:uso/:anio/:modalidad/:programa/:modelo/:precio/:tipo/:marca/:antiguedad', {
                     templateUrl: 'resultadofiltro.html',
                     controller: 'Resultado'
-
                 }).
-
+                when('/resultadouser/:orderId/:uso/:anio/:modalidad/:programa/:modelo/:precio/:tipo/:marca/:antiguedad', {
+                    templateUrl: 'resultadofiltrouser.html',
+                    controller: 'ResultadoUser'
+                }).
                 when('/upload', {
                     templateUrl: 'upload.html',
                     controller: 'Admin'

@@ -125,7 +125,7 @@ urlpatterns = [
     url(r'^generapdf/', 'cotizar.views.generapdf'),
     url(r'^getgps/(\d+)/(\w+)/(\w+)/(\w+)/(\w+)/(\w+)/(\w+)', 'cotizar.views.getgps'),
     url(r'^subir/', 'cotizar.views.subir'),
-    url(r'^enviaemail/', 'cotizar.views.enviaemail'),
+    url(r'^enviaemail', 'cotizar.views.enviaemail'),
     url(r'^fiiiii/', 'cotizar.views.fiiiii'),
     url(r'^tasaadmin/', 'cotizar.views.tasaadmin'),
     url(r'^subirtasas', 'cotizar.views.subirtasas'),

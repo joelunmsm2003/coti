@@ -1,8 +1,7 @@
 
-function Resultado($scope,$http,$filter,$routeParams,$location,$localStorage) {
+function ResultadoUser($scope,$http,$filter,$routeParams,$location,$localStorage) {
 
- $scope.myText = "My name is: <h1>John Doe</h1>";
- 
+
 $scope.items5 = [
 {
   id: 0,
@@ -114,7 +113,7 @@ $scope.descuentopositiva={}
 $scope.descuentomapfre={}
 $scope.descuentorimac.value=100
 $scope.descuentopositiva.value=100
-$scope.descuentomapfre.value=100
+$scope.descuentomapfre.value=93
 
     $scope.descuento = function(descuento){
 
@@ -315,15 +314,11 @@ $scope.descuentomapfre.value=100
 
             $scope.cobertura = response;
 
-
-
         });
 
          $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/"+$scope.marca+"/"+$scope.monto+"/").success(function(response) {
 
             $scope.deducible = response;
-
-
 
         });
 
@@ -380,68 +375,6 @@ $scope.descuentomapfre.value=100
 
     }
 
-    // $scope.programapositiva = function (data) {
-
-      
-
-    //     $scope.posi = data.programap.id_prog
-
-    //     console.log($scope.posi)
-
-    //     $scope.programa = $scope.mafe+'z'+$scope.ri+'z'+$scope.posi+'z'+$scope.pa
-
-    //     $scope.parametros.programa = $scope.programa
-
-    //     console.log('programa',$scope.programa)
-
-    //     $http.get(host+"/cobertura/"+$scope.order_id+'/'+$scope.uso+'/'+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/").success(function(response) {
-
-    //         $scope.cobertura = response;
-
-
-
-    //     });
-
-    //      $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/").success(function(response) {
-
-    //     $scope.deducible = response;
-
-
-    //     });
-
-    // }
-
-    // $scope.programapacifico = function (data) {
-
-    //     $scope.pa = data.programapa.id_prog
-
-
-    //     console.log($scope.pa)
-
-
-    //     console.log($scope.parametros.programa)
-
-
-      
-
-    //     console.log('programa',$scope.programa)
-
-    //     $http.get(host+"/cobertura/"+$scope.order_id+'/'+$scope.uso+'/'+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/").success(function(response) {
-
-    //         $scope.cobertura = response;
-
-
-    //     });
-
-    //      $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.programa+'/'+$scope.modelo+"/").success(function(response) {
-
-    //     $scope.deducible = response;
-
-
-
-    //     });
-
-    // }
 
 
 
@@ -485,15 +418,7 @@ $scope.descuentomapfre.value=100
 
         });
 
-        /*
-        $http.get(host+"/financ/").success(function(response) {
 
-        $scope.financ = response;
-
-
-        });
-
-*/
 
 
      $http.get(host+"/deducible/"+$scope.order_id+'/'+$scope.uso+"/"+$scope.anio+'/'+$scope.modalidad+'/'+$scope.parametros.programa+'/'+$scope.modelo+"/"+$scope.marca+"/"+$scope.monto+"/").success(function(response) {
@@ -507,7 +432,134 @@ $scope.descuentomapfre.value=100
 
     $scope.model = {}
 
-    $scope.traeprima = function(descuento,descuentopositiva,descuentomapfre){
+      //Primas
+
+    $http({
+
+        url: host+"/primaneta/"+$scope.descuentorimac.value+'/'+$scope.descuentopositiva.value+'/'+$scope.descuentomapfre.value,
+        data: $scope.parametros,
+        method: 'POST',
+
+    }).
+    success(function(data) {
+
+
+
+        $scope.model.tasahdi = data[0]['tasahdi']
+        $scope.model.tasapositiva = data[3]['tasapositiva']
+        $scope.model.tasamapfre = data[1]['tasamapfre']
+        $scope.model.tasapacifico = data[2]['tasapacifico']
+        $scope.model.tasarimac = data[4]['tasarimac']
+
+        $scope.hdi = data[0]['hdi']
+        $scope.positiva = data[3]['positiva']
+        $scope.mapfre = data[1]['mapfre']
+        $scope.pacifico = data[2]['pacifico']
+        $scope.rimac = data[4]['rimac']
+
+
+        $scope.hdisubtotal = data[0]['hdisubtotal']
+        $scope.positivasubtotal = data[3]['positivasubtotal']
+        $scope.mapfresubtotal = data[1]['mapfresubtotal']
+        $scope.pacificosubtotal = data[2]['pacificosubtotal']
+        $scope.rimacsubtotal = data[4]['rimacsubtotal']
+
+        $scope.hditotal = data[0]['hditotal']
+        $scope.positivatotal = data[3]['positivatotal']
+        $scope.mapfretotal = data[1]['mapfretotal']
+        $scope.pacificototal = data[2]['pacificototal']
+        $scope.rimactotal = data[4]['rimactotal']
+
+        $scope.riesgomapfre =data[1]['riesgomapfre']
+        $scope.idriesgomapfre =data[1]['idriesgomapfre'] 
+
+        $scope.riesgohdi =data[0]['riesgohdi']
+        $scope.idriesgohdi =data[0]['idriesgohdi']      
+        $scope.riesgorimac =data[4]['riesgo']
+        $scope.idriesgo =data[4]['idriesgo']
+
+
+        $scope.riesgopositiva =data[3]['riesgopositiva']
+        $scope.idriesgopositiva =data[3]['idriesgopositiva']
+
+        // Descuentos Positiva
+
+
+        $http.get(host+"/descuentopositiva/"+$scope.marca+"/"+$scope.modelo+"/"+$scope.tipo+"/"+$scope.uso+"/"+$scope.idriesgopositiva).success(function(response) {
+
+        if (response.descuento10=='Si'){
+
+            $scope.posidescuento = $scope.descuento10
+
+            $scope.descuentopositiva.value = 90
+        }
+
+        if (response.descuento15=='Si'){
+
+           $scope.posidescuento = $scope.descuento15 
+
+           $scope.descuentopositiva.value = 85  
+        }
+
+        $scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)
+
+
+        });
+
+        $scope.riesgopacifico =data[2]['riesgopacifico']
+        $scope.idriesgopacifico =data[2]['idriesgopacifico']
+
+        // Descuents de Rimac
+
+        if($scope.idriesgo == 5 || $scope.idriesgo==6){
+
+            $scope.items = $scope.items5
+
+            $scope.descuentorimac.value=95
+        }
+         if($scope.idriesgo == 4 || $scope.idriesgo==7){
+
+            $scope.items = $scope.items8
+
+            $scope.descuentorimac.value=92
+        }
+
+        $scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)
+
+
+
+
+        /// Trae Financiamiento
+
+
+        $routeParams.hditotal =$scope.hditotal
+        $routeParams.positivatotal  =$scope.positivatotal
+        $routeParams.mapfretotal =$scope.mapfretotal
+        $routeParams.pacificototal  =$scope.pacificototal
+        $routeParams.rimactotal=$scope.rimactotal
+
+
+
+            $http({
+
+            url: host+"/fiiiii/",
+            data: $routeParams,
+            method: 'POST',
+
+            }).
+            success(function(data) {
+
+
+            $scope.financ = data
+
+
+            })
+
+
+    })
+
+    $scope.traeprima = function(descuento,descuentopositiva,descuentomapfre)
+    {
 
 
     $http({
@@ -554,38 +606,14 @@ $scope.descuentomapfre.value=100
         $scope.riesgorimac =data[4]['riesgo']
         $scope.idriesgo =data[4]['idriesgo']
 
-
         $scope.riesgopositiva =data[3]['riesgopositiva']
         $scope.idriesgopositiva =data[3]['idriesgopositiva']
 
 
-        $http.get(host+"/descuentopositiva/"+$scope.marca+"/"+$scope.modelo+"/"+$scope.tipo+"/"+$scope.uso+"/"+$scope.idriesgopositiva).success(function(response) {
-
-        if (response.descuento10=='Si'){
-
-            $scope.posidescuento = $scope.descuento10
-        }
-
-        if (response.descuento15=='Si'){
-
-           $scope.posidescuento = $scope.descuento15   
-        }
-
-        });
-
         $scope.riesgopacifico =data[2]['riesgopacifico']
         $scope.idriesgopacifico =data[2]['idriesgopacifico']
 
-        if($scope.idriesgo == 5 || $scope.idriesgo==6){
-
-            $scope.items = $scope.items5
-        }
-         if($scope.idriesgo == 4 || $scope.idriesgo==7){
-
-            $scope.items = $scope.items8
-        }
-
-
+    
 
         /// Trae Financiamiento
 
@@ -616,43 +644,11 @@ $scope.descuentomapfre.value=100
 
 
 
-                /*Pdf Genera*/
-
-        // $scope.pdf = {}
-
-
-
-        // $scope.pdf.tasahdi = data[0]['tasahdi']
-        // $scope.pdf.tasapositiva = data[3]['tasapositiva']
-        // $scope.pdf.tasamapfre = data[1]['tasamapfre']
-        // $scope.pdf.tasapacifico = data[2]['tasapacifico']
-        // $scope.pdf.tasarimac = data[4]['tasarimac']
-
-        // $scope.pdf.hdi = data[0]['hdi']
-        // $scope.pdf.positiva = data[3]['positiva']
-        // $scope.pdf.mapfre = data[1]['mapfre']
-        // $scope.pdf.pacifico = data[2]['pacifico']
-        // $scope.pdf.rimac = data[4]['rimac']
-
-        // $scope.pdf.phdisubtotal = data[0]['phdisubtotal']
-        // $scope.pdf.positivasubtotal = data[3]['positivasubtotal']
-        // $scope.pdf.mapfresubtotal = data[1]['mapfresubtotal']
-        // $scope.pdf.pacificosubtotal = data[2]['pacificosubtotal']
-        // $scope.pdf.rimacsubtotal = data[4]['rimacsubtotal']
-
-        // $scope.pdf.phditotal = data[0]['phditotal']
-        // $scope.pdf.positivatotal = data[3]['positivatotal']
-        // $scope.pdf.mapfretotal = data[1]['mapfretotal']
-        // $scope.pdf.pacificototal = data[2]['pacificototal']
-        // $scope.pdf.rimactotal = data[4]['rimactotal']
-
-
-
     })
 
     }
 
-    $scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)
+    //$scope.traeprima($scope.descuentorimac.value,$scope.descuentopositiva.value,$scope.descuentomapfre.value)
 
 
 
@@ -666,12 +662,13 @@ $scope.descuentomapfre.value=100
 
        
 
-
+  $scope.sendemailfunction = function()
+    {
 
 
     $http({
 
-        url: host+"/enviaemail/",
+        url: host+"/enviaemail",
         data: $routeParams,
         method: 'POST',
 
@@ -682,6 +679,12 @@ $scope.descuentomapfre.value=100
 
 
     })
+
+
+  }
+
+
+    //setTimeout(function(){ $scope.sendemailfunction() }, 4000);
 
 
 

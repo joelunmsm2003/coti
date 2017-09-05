@@ -1,6 +1,6 @@
 
 
-function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
+function CotizaUser($scope,$http,$filter,$location,$localStorage,NgMap) {
 
     $scope.riesgo = 8
 
@@ -9,6 +9,9 @@ function Cotiza($scope,$http,$filter,$location,$localStorage,NgMap) {
     $scope.ubicL= true
 
     $scope.ubicP= true
+
+
+
 
   $scope.autoRotate = function() {
       if (vm.map.getTilt() != 0) {
@@ -412,7 +415,10 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
         success(function(data) {
 
 
-            console.log('respuesta.....',data)
+
+            console.log('Resultado...',data)
+
+            $scope.id_cliente = data
 
 
 
@@ -470,7 +476,8 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
 
                 programita = $scope.pm+'z'+$scope.pr+'z'+$scope.pp+'z9'
 
-                urlenvia = '/resultado/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad
+
+                                urlenvia = '/resultadouser/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad
 
                 todo = {
 
@@ -489,11 +496,44 @@ $scope.saveContact = function (model,precio,check,ubicP,ubicL) {
                         success(function(data) {
 
 
+                            console.log('cliente....',$scope.id_cliente)
+
+
+                            //Envia email
+
+                                    todo = {
+
+                                            data:$scope.id_cliente
+                                    }
+
+                                    $http({
+
+                                        url: host+"/enviaemail",
+                                        data: todo,
+                                        method: 'POST',
+
+                                    }).
+                                    success(function(data) {
+
+                                        console.log(data)
+
+
+                                    })
+
+
+
                         })
 
 
 
-                $location.url('/resultado/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad)
+                $location.url('/resultadouser/'+data+'/'+model.uso+'/'+model.anio.id_anio+'/'+model.modalidad.id_modalidad+'/'+programita+'/'+model.modelo.id_modelo+'/'+$scope.precio+'/'+tipo+'/'+marca+'/'+antiguedad)
+
+                
+
+
+
+
+
 
 
                });

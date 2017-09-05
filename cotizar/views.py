@@ -70,6 +70,8 @@ from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
 from reportlab.lib.units import inch
 from django.http import HttpResponse
 from django.core.mail import EmailMultiAlternatives
+import time
+
 
 def ValuesQuerySetToDict(vqs):
 	return [item for item in vqs]
@@ -1700,11 +1702,11 @@ def generapdf(request):
 
 		body = data['data']
 
-		urlpdf = 'http://cotizador.hermes.pe:800/hermes/hermes/#'+body
+		urlpdf = str('http://cotizador.hermes.pe:800/hermes/hermes/#'+str(body))
 
 		print urlpdf
 
-		pdfkit.from_url('http://cotizador.hermes.pe:800/hermes/hermes/#/resultado/1165/1/29/2/1z2z4z9/6800/2017/1/90/Nuevo', 'out.pdf')
+		pdfkit.from_url(urlpdf, 'out.pdf')
 
 
 	return HttpResponse(data, content_type="application/json")
@@ -5082,11 +5084,8 @@ def cotiSave(request):
 		statusubicL=dato['statusubicL']
 		statusubicP=dato['statusubicP']
 
-		
-	
+			
 		Clientes(fullname=name,email=email,celular=cel,chose_tipo_id=int(tipo),chose_marca_id=int(marca),chose_anio_id=int(anio),chose_modelo_id=int(modelo),chose_modalid_id=int(modalidad),chose_uso_id=int(uso),value=float(precio),chose_ubicl=int(statusubicL),chose_ubicp=int(statusubicP),chose_informat=int(statuscheck)).save()
-
-
 
 		id_cliente =  Clientes.objects.all().values('id_cliente').order_by('-id_cliente')[0]['id_cliente']
 
@@ -5101,10 +5100,7 @@ def enviaemail(request):
 
 		data = json.loads(request.body)
 
-		#go.db.models.query.ValuesQuerySet'>
-		#{u'orderId': u'425', u'anio': u'28', u'uso': u'1', u'precio': u'4444', u'modelo': u'6372', u'programa': u'3', u'modalidad': u'2'}
-
-		orderId = data['orderId']
+		orderId = data['data']
 
 		cli = Clientes.objects.get(id_cliente=orderId)
 
@@ -5112,15 +5108,16 @@ def enviaemail(request):
 
 		email = cli.email
 
-		modelo = data['modelo']
+		modelo = cli.chose_modelo
 
-		cli = data['orderId']
+		marca = cli.chose_marca
 
-		precio = data['precio']
+		tipo = cli.chose_tipo
 
-		a = AutoValor.objects.filter(id_modelo_id=modelo)
+		precio = cli.value
 
-		#url = data['urld']
+		a = AutoValor.objects.filter(id_marca=marca,id_modelo_id=modelo,id_tipo=tipo)
+
 
 		for m in a:
 
@@ -5131,9 +5128,7 @@ def enviaemail(request):
 		msj = 'Estimado cliente '+ str(name) +' , el siguiente link detalla la cotizacion del auto ' + str(marca) +' '+ str(modelo)+ ' valorizado en ' +str(precio)+'. Adjunto el link: '+ str('http://cotizador.hermes.pe:800/hermes/out.pdf')
 
 		
-		id = Clientes.objects.get(id_cliente=cli).id_cliente
-
-		flag  = Clientes.objects.get(id_cliente=id).chose_informat
+		flag  = Clientes.objects.get(id_cliente=orderId).chose_informat
 
 		if flag == 1:
 
@@ -5147,7 +5142,7 @@ def enviaemail(request):
 			text_content = 'This is an important message.'
 			#html_content = '<p>This is an <strong>important</strong> message.</p> <img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png">'
 			
-			html_content = '<img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png"> <br> Estimado cliente <strong>'+ str(name) +': </strong> <br><br><br>Adjuntamos en formato PDF el detalle de la cotizacion del auto <strong>' + str(marca) +' '+ str(modelo)+ '</strong> valorizado en <strong>USD ' +str(precio)+'</strong><br><br>'
+			html_content = '<img src="http://cotizador.hermes.pe:800/hermes/hermes/img/logo-hermes.png"> <br><br><br> Estimado cliente <strong>'+ str(name) +': </strong> <br><br><br>Adjuntamos en formato PDF el detalle de la cotizacion del auto <strong>' + str(marca) +' '+ str(modelo)+ '</strong> valorizado en <strong>USD ' +str(precio)+'</strong><br><br>'
 
 
 
