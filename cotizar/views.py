@@ -2706,7 +2706,7 @@ def fiiiii(request):
 
 			valor = round((primahdi*f.tea/100+primahdi)/int(f.cuota),2)
 
-			financiamiento[i]['hdi'] = str(f.cuota) +' '+str('cuotas de $/.')+str(valor)
+			financiamiento[i]['hdi'] = str(f.cuota) +' '+str('cuotas de S/.')+str(valor)
 
 		else:
 

@@ -19,9 +19,15 @@
   <img src="img/logo-hermes.png" class="img-responsive" alt="Image">
 
 	<h4> Cotizacion Vehicular (Usuario Final)  </h4>
-    <p></p>
+ <!--    <p></p>
     <a href='#/cotizauser'  class="btn btn-default btn-sm">Nueva Cotizacion</a>
+ -->
+
+
     <h4>Cliente</h4>
+
+
+
     <table class="table table-striped ">
     <thead>
     <th>Nombre : </th>
@@ -108,14 +114,24 @@
 
             </thead>
             <tr>
-            <td></td>
+            <td>Programa</td>
             <td>
-            <select  disabled ng-change= "programamapfre(model)" ng-options="item as item.id_prog__program for item in programasmapfre track by item.id_prog" type="text" class="form-control" ng-model="model.programam" required =""  ></select></td>
+
+            {{model.programam.id_prog__program}}
+            <!-- <select  disabled ng-change= "programamapfre(model)" ng-options="item as item.id_prog__program for item in programasmapfre track by item.id_prog" type="text" class="form-control" ng-model="model.programam" required =""  ></select>
+ -->
+            </td>
 
 
-            <td><select disabled  ng-change= "programarimac(model)" ng-options="item as item.id_prog__program for item in programasrimac track by item.id_prog" type="text" class="form-control" ng-model="model.programar" required =""  ></select></td>
+            <td>
 
-            <td><select disabled ng-change= "programapositiva(model)" ng-options="item as item.id_prog__program for item in programaspositiva track by item.id_prog" type="text" class="form-control" ng-model="model.programap" required =""  ></select></td>
+            {{model.programar.id_prog__program}}
+
+            <!-- <select disabled  ng-change= "programarimac(model)" ng-options="item as item.id_prog__program for item in programasrimac track by item.id_prog" type="text" class="form-control" ng-model="model.programar" required =""  ></select> --></td>
+
+            <td>
+            {{model.programap.id_prog__program}}
+            <!-- <select disabled ng-change= "programapositiva(model)" ng-options="item as item.id_prog__program for item in programaspositiva track by item.id_prog" type="text" class="form-control" ng-model="model.programap" required =""  ></select> --></td>
 
             <td></td>
             </tr>
@@ -158,7 +174,7 @@
 
             </th>
             <th style='background-color:#FF6601;'><span ng-if="model.tasapacifico"> Tasa : {{model.tasapacifico}}% </span></th>
-            <th style='background-color:#FF6601;'><span ng-if="model.tasahdi"> Tasa : {{model.tasahdi}}% </span> </th>
+            <th style='background-color:#FF6601;'><span ng-if="model.tasahdi"> Tasa : {{model.tasahdi}}% (Soles)</span> </th>
             <tr>
 
             <!-- Perfil: {{perfil}}  -->
